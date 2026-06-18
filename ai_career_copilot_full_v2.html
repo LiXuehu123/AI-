@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Career Copilot｜全流程求职智能助手</title>
+  <meta name="description" content="面向所有求职者的 AI 岗位解析、简历匹配、ATS 优化、材料生成、面试准备、Offer 决策与投递管理工具 Demo。" />
+  <style>
+    :root{
+      --bg:#f7f2e8;
+      --bg2:#eefaf7;
+      --ink:#102033;
+      --muted:#64748b;
+      --sub:#334155;
+      --card:#ffffff;
+      --line:#dbe4e8;
+      --navy:#062638;
+      --navy2:#0b3b52;
+      --teal:#0f766e;
+      --teal2:#14b8a6;
+      --mint:#99f6e4;
+      --gold:#f59e0b;
+      --amber:#fbbf24;
+      --coral:#f97316;
+      --red:#ef4444;
+      --green:#16a34a;
+      --blue:#2563eb;
+      --shadow:0 24px 80px rgba(15, 23, 42, .14);
+      --shadow2:0 10px 30px rgba(15, 23, 42, .08);
+      --radius:26px;
+      --radius2:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(20,184,166,.18), transparent 28%),
+        radial-gradient(circle at 90% 8%, rgba(245,158,11,.18), transparent 24%),
+        linear-gradient(180deg, #fbf7ee 0%, #f5f6ef 40%, #eef7f4 100%);
+      line-height:1.65;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{width:min(1120px, calc(100% - 40px)); margin:0 auto;}
+    .hero .container{width:min(1280px, calc(100% - 40px));}
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(18px);
+      background:rgba(247,242,232,.82);
+      border-bottom:1px solid rgba(219,228,232,.72);
+    }
+    .nav-inner{height:72px; display:flex; align-items:center; justify-content:space-between; gap:24px;}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:-.02em;}
+    .logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--navy),var(--teal2) 58%,var(--amber)); box-shadow:0 12px 28px rgba(15,118,110,.3); position:relative; overflow:hidden;}
+    .logo:after{content:"";position:absolute;width:22px;height:22px;border:2px solid rgba(255,255,255,.75);border-radius:50%;right:7px;top:6px;}
+    .logo:before{content:"";position:absolute;width:28px;height:7px;border-radius:999px;background:rgba(255,255,255,.82);left:-5px;bottom:9px;transform:rotate(-28deg)}
+    .brand small{display:block;color:var(--muted);font-weight:700;letter-spacing:.04em;font-size:11px;text-transform:uppercase;margin-top:-3px}
+    .nav-links{display:flex; gap:18px; align-items:center; font-size:14px; color:#385164; font-weight:700;}
+    .nav-links a{padding:8px 10px;border-radius:999px}
+    .nav-links a:hover{background:rgba(15,118,110,.1); color:var(--teal)}
+    .btn{border:0;border-radius:999px;padding:12px 18px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.2s ease;font-family:var(--sans);}
+    .btn-primary{color:white;background:linear-gradient(135deg,var(--teal),#0891b2);box-shadow:0 14px 36px rgba(15,118,110,.24)}
+    .btn-primary:hover{transform:translateY(-2px); box-shadow:0 18px 44px rgba(15,118,110,.32)}
+    .btn-dark{background:var(--navy);color:white}
+    .btn-ghost{background:rgba(255,255,255,.82);color:var(--ink);border:1px solid var(--line)}
+    .btn-soft{background:rgba(15,118,110,.1);color:#0f766e;border:1px solid rgba(15,118,110,.16)}
+    .btn-gold{background:linear-gradient(135deg,#f59e0b,#f97316);color:white;box-shadow:0 14px 32px rgba(245,158,11,.25)}
+    .btn-sm{padding:8px 12px;font-size:13px}
+    .hero{padding:76px 0 62px; position:relative; overflow:hidden;}
+    .hero-grid{display:grid; grid-template-columns:1.04fr .96fr; gap:38px; align-items:center;}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.76);border:1px solid rgba(219,228,232,.8);box-shadow:var(--shadow2);color:#0f766e;font-weight:900;font-size:13px;}
+    .hero h1{font-size:clamp(42px,6vw,72px); line-height:1.03; letter-spacing:-.06em; margin:22px 0 18px;}
+    .hero h1 span{background:linear-gradient(135deg,#062638 0%,#0f766e 54%,#f59e0b 100%); -webkit-background-clip:text;background-clip:text;color:transparent;}
+    .hero p.lead{font-size:19px;color:#405669;max-width:720px;margin:0 0 26px;}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 28px}
+    .hero-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+    .metric-mini{background:rgba(255,255,255,.74);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow2)}
+    .metric-mini strong{font-size:26px;letter-spacing:-.04em;display:block}.metric-mini span{font-size:12px;color:var(--muted);font-weight:800}
+    .hero-panel{background:linear-gradient(160deg,rgba(6,38,56,.98),rgba(11,59,82,.96));border-radius:34px;padding:22px;box-shadow:0 34px 90px rgba(6,38,56,.28);color:white;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .hero-panel:before{content:"";position:absolute;inset:-120px -80px auto auto;width:280px;height:280px;background:radial-gradient(circle,rgba(45,212,191,.55),transparent 62%);filter:blur(6px)}
+    .panel-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;margin-bottom:18px}
+    .panel-title{font-weight:900;letter-spacing:-.02em}.panel-title small{display:block;color:rgba(255,255,255,.58);font-weight:700;margin-top:2px}.status-pill{padding:7px 11px;border-radius:999px;background:rgba(153,246,228,.13);border:1px solid rgba(153,246,228,.3);color:#ccfbf1;font-weight:900;font-size:12px}
+    .command-box{position:relative;z-index:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:18px;backdrop-filter:blur(16px)}
+    .terminal-line{font-family:var(--mono);font-size:13px;color:#d1fae5;margin:8px 0}.terminal-line span{color:#fcd34d}
+    .panel-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;position:relative;z-index:1}.panel-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px}.panel-card b{font-size:24px;display:block}.panel-card span{color:rgba(255,255,255,.64);font-size:12px;font-weight:800}
+    .section{padding:64px 0;scroll-margin-top:120px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}.section h2{font-size:clamp(30px,4vw,46px);line-height:1.12;letter-spacing:-.05em;margin:0}.section-desc{max-width:720px;color:#52677a;font-size:16px;margin:10px 0 0}.tag-row{display:flex;gap:9px;flex-wrap:wrap}.tag{padding:7px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#476174;font-size:12px;font-weight:900}.tag.dark{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#ccfbf1}.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{background:rgba(255,255,255,.86);border:1px solid rgba(219,228,232,.86);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow2)}.card h3{margin:0 0 8px;font-size:20px;letter-spacing:-.03em}.card p{color:#5d7182;margin:0}.icon{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(15,118,110,.12),rgba(245,158,11,.16));font-size:22px;margin-bottom:16px}.flow{display:grid;grid-template-columns:repeat(9,1fr);gap:10px}.flow-step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;min-height:118px;position:relative}.flow-step b{display:block;margin-bottom:7px;font-size:13px}.flow-step span{font-size:12px;color:var(--muted);line-height:1.45;display:block}.flow-step em{font-style:normal;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:900;margin-bottom:10px}.workbench{background:linear-gradient(180deg,#062638,#0b3b52);color:white;border-radius:42px;padding:30px;box-shadow:0 35px 100px rgba(6,38,56,.22);position:relative;overflow:hidden}.workbench:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 5%,rgba(20,184,166,.18),transparent 32%),radial-gradient(circle at 90% 20%,rgba(245,158,11,.16),transparent 26%);pointer-events:none}.workbench>*{position:relative;z-index:1}.wb-head{display:flex;align-items:end;justify-content:space-between;gap:22px;margin-bottom:22px}.wb-head h2{color:white}.wb-head .section-desc{color:rgba(255,255,255,.68)}.tabs{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px}.tab{padding:10px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:rgba(255,255,255,.76);font-weight:900;font-size:13px;cursor:pointer}.tab.active{background:#ccfbf1;color:#064e3b;border-color:#ccfbf1}.tool-panel{display:none}.tool-panel.active{display:block}.tool-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:18px}.tool-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:26px;padding:22px;backdrop-filter:blur(18px)}.tool-box.light{background:rgba(255,255,255,.96);color:var(--ink);border-color:rgba(255,255,255,.5)}.tool-box h3{margin:0 0 8px;font-size:21px;letter-spacing:-.03em}.tool-box p{margin:0 0 14px;color:rgba(255,255,255,.68)}.tool-box.light p{color:var(--muted)}label{font-weight:900;font-size:13px;display:block;margin:12px 0 7px;color:inherit}.input, textarea, select{width:100%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:white;border-radius:16px;padding:13px 14px;font-family:var(--sans);font-size:14px;outline:none;min-height:46px}textarea{min-height:150px;resize:vertical}.light .input,.light textarea,.light select,.panel-white .input,.panel-white textarea,.panel-white select{background:#fff;color:var(--ink);border:1px solid var(--line)}select option{color:var(--ink)}.input::placeholder,textarea::placeholder{color:rgba(255,255,255,.45)}.light .input::placeholder,.light textarea::placeholder{color:#94a3b8}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.result-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;color:var(--ink)}.result-card.darkish{background:rgba(6,38,56,.05)}.result-title{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:10px}.result-title b{font-size:17px}.score-ring{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--teal) calc(var(--score)*1%), #e8eef0 0);position:relative}.score-ring:after{content:"";position:absolute;width:78px;height:78px;border-radius:50%;background:#fff}.score-ring span{position:relative;z-index:1;font-size:28px;font-weight:1000;letter-spacing:-.05em}.score-layout{display:grid;grid-template-columns:130px 1fr;gap:18px;align-items:center}.progress{height:10px;border-radius:999px;background:#e8eef0;overflow:hidden}.progress i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--amber));width:0}.kv{display:grid;grid-template-columns:120px 1fr;gap:9px;margin:8px 0;font-size:14px}.kv b{color:#183044}.kv span{color:#5a6b7a}.list-clean{padding-left:0;list-style:none;margin:10px 0}.list-clean li{padding:9px 0;border-bottom:1px dashed #e5e7eb;color:#485d6f}.list-clean li:last-child{border-bottom:0}.pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;background:#ecfdf5;color:#047857;margin:4px 4px 4px 0}.pill.warn{background:#fffbeb;color:#b45309}.pill.bad{background:#fef2f2;color:#b91c1c}.pill.blue{background:#eff6ff;color:#1d4ed8}.copyable{position:relative}.copy-btn{position:absolute;right:12px;top:12px;border:0;background:#f1f5f9;color:#334155;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:900;cursor:pointer}.copy-text{white-space:pre-wrap;background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:16px;color:#334155;margin:10px 0 0}.table-wrap{overflow:auto;border-radius:20px;border:1px solid var(--line);background:#fff}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:13px;border-bottom:1px solid #e8eef0;vertical-align:top}th{background:#f8fafc;color:#334155;font-size:12px;text-transform:uppercase;letter-spacing:.04em}tr:last-child td{border-bottom:0}.status-select{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:8px;font-weight:800}.delete-btn{border:0;background:#fff1f2;color:#be123c;border-radius:999px;padding:7px 9px;cursor:pointer;font-weight:900}.panel-white{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow2)}.module-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.module{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;min-height:168px}.module b{display:block;margin:10px 0 6px}.module span{color:var(--muted);font-size:13px}.module .num{width:34px;height:34px;border-radius:12px;background:#ecfeff;color:#0e7490;display:grid;place-items:center;font-weight:1000}.feature-large{display:grid;grid-template-columns:1fr 1fr;gap:18px}.quote{background:linear-gradient(135deg,#083344,#0f766e);color:#fff;border-radius:30px;padding:28px;box-shadow:var(--shadow2)}.quote h3{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}.quote p{color:rgba(255,255,255,.74)}.footer{padding:44px 0;background:#051923;color:rgba(255,255,255,.75)}.footer b{color:white}.notice{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:18px;padding:15px;font-weight:800;font-size:14px}.toast{position:fixed;right:20px;bottom:20px;background:#062638;color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 18px 50px rgba(0,0,0,.28);font-weight:900;opacity:0;transform:translateY(16px);transition:.25s;z-index:200}.toast.show{opacity:1;transform:translateY(0)}.hide{display:none!important}
+
+    #top{scroll-margin-top:120px}
+    .compact-section{padding-top:54px;padding-bottom:54px}
+    .demo-note{display:inline-flex;align-items:center;gap:8px;background:#ecfeff;border:1px solid #a5f3fc;color:#155e75;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:900;margin:8px 0 12px}
+    .demo-note:before{content:"●";color:var(--teal2);font-size:10px}
+    .competitor-card{background:linear-gradient(145deg,#062638,#0b3b52);color:#fff;border-radius:30px;padding:26px;box-shadow:0 24px 80px rgba(6,38,56,.22);overflow:hidden;position:relative}
+    .competitor-card:before{content:"";position:absolute;right:-80px;top:-80px;width:220px;height:220px;border-radius:50%;background:rgba(20,184,166,.2)}
+    .competitor-card>*{position:relative;z-index:1}.competitor-card p{color:rgba(255,255,255,.74)}
+    .module-layer{background:rgba(255,255,255,.78);border:1px solid rgba(219,228,232,.92);border-radius:28px;padding:20px;box-shadow:var(--shadow2);margin-top:18px}
+    .module-layer-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:14px}
+    .module-layer-head h3{margin:0;font-size:21px;letter-spacing:-.03em}.module-layer-head p{margin:5px 0 0;color:var(--muted);font-size:14px}
+    .module-layer .module-grid{grid-template-columns:repeat(3,1fr)}
+    .module-layer.materials .module-grid{grid-template-columns:repeat(4,1fr)}
+    .layer-badge{padding:7px 11px;border-radius:999px;background:#ecfeff;border:1px solid #a5f3fc;color:#0e7490;font-size:12px;font-weight:1000;white-space:nowrap}
+    .evidence-table td:nth-child(2),.evidence-table th:nth-child(2){text-align:center;font-weight:900;white-space:nowrap}.evidence-table td:nth-child(3),.evidence-table td:nth-child(4){min-width:170px}
+    .priority-chip{display:inline-flex;align-items:center;border-radius:999px;padding:7px 10px;font-weight:1000;font-size:12px;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}.priority-chip.mid{background:#fffbeb;color:#92400e;border-color:#fde68a}.priority-chip.low{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .follow-pill{display:inline-flex;border-radius:999px;padding:6px 9px;font-size:12px;font-weight:900;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;white-space:nowrap}.follow-pill.soon{background:#fffbeb;color:#92400e;border-color:#fde68a}.follow-pill.now{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+    .principle-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.principle{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:var(--shadow2)}.principle b{display:block;margin-bottom:6px}.principle span{font-size:13px;color:var(--muted)}
+    .prompt-meta{margin-top:14px;display:grid;gap:8px}.prompt-meta div{padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0;font-size:13px;color:#475569}.prompt-meta b{color:#0f172a}
+    .qa-list{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.qa-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow2)}.qa-card h3{font-size:18px;margin:0 0 8px}.qa-card p{margin:0;color:#52677a}
+    .truth-tags{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.truth-tags span{padding:7px 10px;border-radius:999px;background:#f0fdfa;border:1px solid #99f6e4;color:#0f766e;font-weight:900;font-size:12px}
+    .subtle-divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:18px 0}
+    @media (max-width:1050px){.module-layer .module-grid,.module-layer.materials .module-grid,.principle-grid,.qa-list{grid-template-columns:1fr 1fr}}
+    @media (max-width:700px){.module-layer .module-grid,.module-layer.materials .module-grid,.principle-grid,.qa-list{grid-template-columns:1fr}.module-layer-head{flex-direction:column}.competitor-card{border-radius:24px;padding:20px}.table-wrap{overflow:auto}}
+
+    @media (max-width:1050px){.hero-grid,.tool-grid,.feature-large{grid-template-columns:1fr}.flow{grid-template-columns:repeat(3,1fr)}.module-grid,.grid-4{grid-template-columns:repeat(2,1fr)}.nav-links{display:none}.hero-metrics{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:700px){.container{width:min(100% - 24px,1120px)}.hero{padding-top:42px}.hero h1{font-size:38px}.grid-3,.grid-2,.form-row,.form-row-3,.module-grid,.grid-4,.panel-cards,.score-layout{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.workbench{border-radius:26px;padding:18px}.section{padding:48px 0}.section-head,.wb-head{align-items:flex-start;flex-direction:column}.tabs{overflow:auto;flex-wrap:nowrap;padding-bottom:6px}.tab{white-space:nowrap}.hero-panel{border-radius:26px}.nav-inner{height:64px}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="返回顶部">
+        <span class="logo"></span>
+        <span>AI Career Copilot<small>AI Job Workflow Demo</small></span>
+      </a>
+      <div class="nav-links">
+        <a href="#competitors">竞品分析</a>
+        <a href="#modules">功能矩阵</a>
+        <a href="#pipeline">流程闭环</a>
+        <a href="#workbench">交互工作台</a>
+        <a href="#tracker">投递看板</a>
+        <a href="#metrics">指标体系</a>
+        <a href="#review">项目复盘</a>
+      </div>
+      <a class="btn btn-primary btn-sm" href="#workbench">开始体验</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">✦ 面向所有求职者 · 全流程 AI 求职工作台</div>
+        <h1>从岗位判断到投递复盘的 <span>AI 求职 Copilot</span></h1>
+        <p class="lead">面向应届生、实习生、转岗者与社招候选人，围绕岗位筛选、JD 解析、简历匹配、材料生成、面试准备、投递管理和结果复盘，构建一套可交互的 AI 求职工作流 Demo。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#workbench">体验完整 Demo</a>
+          <a class="btn btn-ghost" href="#modules">查看功能架构</a>
+          <a class="btn btn-soft" href="#review">查看产品复盘</a>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric-mini"><strong>12+</strong><span>核心功能模块</span></div>
+          <div class="metric-mini"><strong>9</strong><span>求职流程节点</span></div>
+          <div class="metric-mini"><strong>6</strong><span>候选人类型</span></div>
+          <div class="metric-mini"><strong>✓</strong><span>真实性约束</span></div>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="panel-top">
+          <div class="panel-title">Career Command Center<small>岗位筛选 · 材料生成 · 投递复盘</small></div>
+          <span class="status-pill">MVP Demo</span>
+        </div>
+        <div class="command-box">
+          <div class="terminal-line"><span>01.</span> Parse JD → 职责 / 要求 / 硬性条件 / 风险点</div>
+          <div class="terminal-line"><span>02.</span> Match Resume → 综合匹配度 / ATS / 能力缺口</div>
+          <div class="terminal-line"><span>03.</span> Generate Kit → 邮件 / 打招呼 / 跟进 / 面试回答</div>
+          <div class="terminal-line"><span>04.</span> Track Pipeline → 投递状态 / 下一步 / 复盘指标</div>
+        </div>
+        <div class="panel-cards">
+          <div class="panel-card"><b>86%</b><span>示例匹配分 86%</span></div>
+          <div class="panel-card"><b>24</b><span>示例关键词 24 个</span></div>
+          <div class="panel-card"><b>7</b><span>示例面试题 7 道</span></div>
+          <div class="panel-card"><b>CSV</b><span>投递数据导出</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>项目定位：不是简历润色器，而是 AI 求职流程工作台</h2>
+          <p class="section-desc">这里的工作台指面向求职流程的任务组织方式，重点展示岗位理解、材料生成、投递管理和复盘评估的完整链路。</p>
+        </div>
+        <div class="tag-row"><span class="tag">全行业岗位</span><span class="tag">全流程闭环</span><span class="tag">可交互 Demo</span><span class="tag">作品集展示</span></div>
+      </div>
+      <div class="grid-3">
+        <div class="card"><div class="icon">🎯</div><h3>面向所有求职者</h3><p>覆盖实习、校招、转岗、社招与跨行业求职，支持不同背景用户围绕目标岗位组织求职任务。</p></div>
+        <div class="card"><div class="icon">🧭</div><h3>面向完整求职链路</h3><p>把岗位判断、JD 解析、简历匹配、材料生成、面试准备、投递管理和结果复盘串联起来。</p></div>
+        <div class="card"><div class="icon">🛡️</div><h3>强调真实与可控</h3><p>通过输入边界、Prompt 约束和输出自检提醒，尽量降低虚构经历、夸大成果和过度营销表达。</p></div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section compact-section" id="competitors">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>竞品分析：为什么不是再做一个简历润色器？</h2>
+          <p class="section-desc">本项目关注的不是单点简历润色，而是求职者从岗位判断、材料准备到投递复盘的完整流程。现有工具通常只覆盖其中一个环节，难以形成完整闭环。</p>
+        </div>
+        <div class="tag-row"><span class="tag">流程型产品</span><span class="tag">AI 工作流</span><span class="tag">求职闭环</span></div>
+      </div>
+      <div class="panel-white">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>工具类型</th><th>代表工具</th><th>主要优势</th><th>主要不足</th><th>本项目机会点</th></tr></thead>
+            <tbody>
+              <tr><td><b>通用 AI 工具</b></td><td>ChatGPT、Kimi、豆包等</td><td>文本理解和生成能力强，可辅助分析 JD、润色简历和生成邮件</td><td>依赖用户自行设计 Prompt，输出结构不稳定，缺少固定求职流程和投递管理</td><td>将通用 AI 能力封装为标准化求职工作流</td></tr>
+              <tr><td><b>简历优化工具</b></td><td>简历模板网站、AI 简历润色工具</td><td>能优化简历格式、语言表达和内容结构</td><td>多数停留在简历表达层，缺少基于 JD 的匹配判断和后续投递闭环</td><td>从“优化简历”升级为“岗位匹配 + 材料生成”</td></tr>
+              <tr><td><b>招聘平台</b></td><td>BOSS 直聘、实习僧、拉勾、猎聘等</td><td>岗位信息丰富，支持浏览、投递和在线沟通</td><td>更偏岗位撮合，不承担深度 JD 解析、简历诊断和求职策略生成</td><td>作为招聘平台前后的求职准备与复盘工具</td></tr>
+              <tr><td><b>表格/笔记工具</b></td><td>Excel、Notion、飞书表格等</td><td>可记录公司、岗位、渠道、状态和跟进信息</td><td>需要手动维护，无法自动分析岗位、生成材料或判断优先级</td><td>将投递记录与 AI 匹配结果、跟进提醒和数据复盘联动</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="competitor-card" style="margin-top:18px">
+        <h3>差异化定位总结</h3>
+        <p>现有工具多数只解决求职流程中的单点问题：通用 AI 负责文本生成，简历工具负责表达润色，招聘平台负责岗位投递，表格工具负责进度记录。但求职者真正需要的是从“判断岗位值不值得投”到“如何准备材料、如何跟进、如何复盘”的完整链路。因此，本项目定位为 AI 求职流程工作台，将 JD 解析、简历匹配、材料生成、面试准备、投递管理和数据复盘整合为一个可交互的 AI 求职工作流 Demo。</p>
+        <div class="tag-row"><span class="tag dark">流程闭环</span><span class="tag dark">AI 结构化输出</span><span class="tag dark">匹配证据链</span><span class="tag dark">真实性约束</span><span class="tag dark">投递复盘</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section compact-section" id="modules">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>完整功能矩阵</h2>
+          <p class="section-desc">功能设计围绕真实求职链路展开，不只解决简历表达问题，而是覆盖岗位判断、JD 解析、简历匹配、材料生成、面试准备、投递跟进和结果复盘等关键节点。</p>
+        </div>
+      </div>
+
+      <div class="module-layer">
+        <div class="module-layer-head"><div><h3>求职决策层</h3><p>帮助用户判断什么岗位值得投、如何分配投递精力。</p></div><span class="layer-badge">Decision</span></div>
+        <div class="module-grid">
+          <div class="module"><div class="num">01</div><b>求职画像配置</b><span>录入学历、经验、目标城市、岗位方向、求职阶段，作为后续生成上下文。</span></div>
+          <div class="module"><div class="num">02</div><b>岗位优先级判断</b><span>根据行业、岗位、成长性、城市、门槛和投递成本判断是否值得优先投递。</span></div>
+          <div class="module"><div class="num">10</div><b>Offer 对比决策</b><span>按薪资、成长、岗位匹配、通勤和长期价值进行机会对比。</span></div>
+        </div>
+      </div>
+
+      <div class="module-layer">
+        <div class="module-layer-head"><div><h3>AI 解析层</h3><p>把岗位 JD 与简历内容转成结构化信息和可解释评分。</p></div><span class="layer-badge">Analyze</span></div>
+        <div class="module-grid">
+          <div class="module"><div class="num">03</div><b>JD 智能解析</b><span>拆解岗位名称、岗位类型、核心任务、硬性要求、软性能力、加分项和风险点。</span></div>
+          <div class="module"><div class="num">04</div><b>ATS 关键词提取</b><span>提取技能词、工具词、经验词和岗位关键词，辅助简历命中筛选系统。</span></div>
+          <div class="module"><div class="num">05</div><b>简历匹配评分</b><span>通过评分维度、匹配证据和能力缺口展示为什么得出这个分数。</span></div>
+        </div>
+      </div>
+
+      <div class="module-layer materials">
+        <div class="module-layer-head"><div><h3>材料生成层</h3><p>把分析结果转化为可投递、可修改、可复用的求职材料。</p></div><span class="layer-badge">Generate</span></div>
+        <div class="module-grid">
+          <div class="module"><div class="num">06</div><b>能力缺口诊断</b><span>输出当前缺少哪些能力、材料、项目证据或面试表达准备。</span></div>
+          <div class="module"><div class="num">07</div><b>简历 Bullet 优化</b><span>采用“原表述—问题分析—优化后表述”的证据化表达方式。</span></div>
+          <div class="module"><div class="num">08</div><b>求职材料生成</b><span>生成邮件、平台打招呼、Cover Letter、跟进话术和附件命名。</span></div>
+          <div class="module"><div class="num">09</div><b>面试准备助手</b><span>生成自我介绍、高频问题、STAR 框架、反问问题和面试检查清单。</span></div>
+        </div>
+      </div>
+
+      <div class="module-layer">
+        <div class="module-layer-head"><div><h3>管理复盘层</h3><p>把求职动作沉淀为投递数据，用于跟进和复盘。</p></div><span class="layer-badge">Track</span></div>
+        <div class="module-grid">
+          <div class="module"><div class="num">11</div><b>投递记录看板</b><span>记录公司、岗位、渠道、状态、下一步行动、跟进日期和备注。</span></div>
+          <div class="module"><div class="num">12</div><b>数据复盘与导出</b><span>统计投递漏斗、沟通率、面试率、待跟进任务，并支持 CSV 导出。</span></div>
+          <div class="module"><div class="num">13</div><b>输出质量复盘</b><span>预留对关键词遗漏率、结构合规率和建议可采纳率的后续验证口径。</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section compact-section" id="pipeline">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>求职全流程闭环</h2>
+          <p class="section-desc">从“看到一个岗位”到“决定是否投递、如何投递、如何跟进、如何复盘”，每一步都对应明确功能。</p>
+        </div>
+      </div>
+      <div class="flow">
+        <div class="flow-step"><em>1</em><b>建立画像</b><span>明确背景、目标、限制条件和求职阶段。</span></div>
+        <div class="flow-step"><em>2</em><b>筛选岗位</b><span>判断岗位价值、门槛和投递优先级。</span></div>
+        <div class="flow-step"><em>3</em><b>解析 JD</b><span>提取职责、要求、关键词、风险点。</span></div>
+        <div class="flow-step"><em>4</em><b>匹配简历</b><span>生成评分、优势、缺口和建议。</span></div>
+        <div class="flow-step"><em>5</em><b>优化表达</b><span>改写经历 bullet，增强证据表达。</span></div>
+        <div class="flow-step"><em>6</em><b>生成材料</b><span>邮件、打招呼、跟进话术与附件命名。</span></div>
+        <div class="flow-step"><em>7</em><b>准备面试</b><span>自我介绍、STAR 案例、反问问题。</span></div>
+        <div class="flow-step"><em>8</em><b>管理投递</b><span>维护状态、渠道、日期和下一步行动。</span></div>
+        <div class="flow-step"><em>9</em><b>复盘转化</b><span>统计回复、面试、Offer 和缺口改进。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="section" id="workbench">
+    <div class="container">
+      <div class="workbench">
+        <div class="wb-head">
+          <div>
+            <h2>交互工作台 Demo</h2>
+            <p class="section-desc">先建立求职画像，再解析岗位 JD，随后生成匹配报告、优化材料并沉淀投递记录。当前为前端模拟版，通过规则和样例输出展示产品交互逻辑。</p>
+          </div>
+          <div class="tag-row"><span class="tag dark">无后端</span><span class="tag dark">LocalStorage</span><span class="tag dark">可部署</span></div>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="profile">1 求职画像</button>
+          <button class="tab" data-tab="priority">2 岗位优先级</button>
+          <button class="tab" data-tab="jd">3 JD 解析</button>
+          <button class="tab" data-tab="match">4 简历匹配</button>
+          <button class="tab" data-tab="resume">5 简历优化</button>
+          <button class="tab" data-tab="materials">6 材料生成</button>
+          <button class="tab" data-tab="interview">7 面试准备</button>
+          <button class="tab" data-tab="offer">8 Offer 对比</button>
+        </div>
+
+        <section class="tool-panel active" id="tab-profile">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>求职者画像配置</h3>
+              <p>用统一画像约束后续输出，避免生成结果过泛。</p>
+              <div class="form-row">
+                <div><label>当前身份</label><select id="profileStage"><option>应届生</option><option>实习生</option><option>转岗求职者</option><option>社招候选人</option><option>留学生/海归</option><option>自由职业转全职</option></select></div>
+                <div><label>目标方向</label><select id="profileRole"><option>不限/多方向</option><option>技术研发</option><option>数据分析/算法</option><option>产品经理</option><option>运营/内容/策略</option><option>市场/品牌</option><option>销售/商务</option><option>设计/创意</option><option>金融/风控</option><option>人力/行政/职能</option><option>教育/传媒</option></select></div>
+              </div>
+              <div class="form-row">
+                <div><label>目标城市</label><input class="input" id="profileCity" placeholder="如：上海 / 北京 / 深圳 / 远程" value="上海 / 杭州 / 远程"></div>
+                <div><label>到岗/入职时间</label><input class="input" id="profileTime" placeholder="如：一周内 / 7月起 / 可长期实习" value="可尽快到岗，优先考虑长期稳定机会"></div>
+              </div>
+              <label>核心经历 / 技能摘要</label>
+              <textarea id="profileSkills" placeholder="输入教育背景、项目经历、实习经历、技能栈、语言能力等">本科/硕士阶段具备数据分析、项目协作、文档撰写和 AI 工具使用经验；熟悉 Python、SQL、Excel、可视化工具，能完成信息整理、需求分析和结果复盘。</textarea>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="saveProfile()">保存画像</button><button class="btn btn-ghost" onclick="fillProfileDemo()">填充通用样例</button></div>
+            </div>
+            <div class="tool-box light" id="profileOutput">
+              <h3>示例画像摘要</h3>
+              <div class="demo-note">模拟 AI 输出结果，仅用于 Demo 展示。</div>
+              <div class="result-card">
+                <div class="kv"><b>当前身份</b><span>研究生 / 应届生</span></div>
+                <div class="kv"><b>目标方向</b><span>AI 产品、数据产品、金融科技产品</span></div>
+                <div class="kv"><b>目标城市</b><span>上海 / 杭州 / 远程</span></div>
+                <div class="kv"><b>核心经历</b><span>产品实习、课程项目、数据分析、AI 工具使用</span></div>
+                <div class="kv"><b>求职阶段</b><span>正在投递实习岗位</span></div>
+                <div class="kv"><b>输出约束</b><span>不虚构经历、不夸大数据、不编造项目成果</span></div>
+              </div>
+              <div class="notice">建议先保存自己的真实画像，再进入 JD 解析、简历匹配和材料生成。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-priority">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>岗位优先级判断</h3>
+              <p>帮助求职者避免“看到岗位就投”，先判断岗位是否值得投入时间。</p>
+              <div class="form-row"><div><label>公司/岗位</label><input class="input" id="prioName" value="某科技公司｜数据运营实习生"></div><div><label>岗位类型</label><select id="prioType"><option>技术研发</option><option>数据分析/运营</option><option selected>产品/运营/策略</option><option>市场/销售</option><option>设计/传媒</option><option>金融/风控</option><option>职能/教育</option></select></div></div>
+              <div class="form-row-3"><div><label>匹配度预估</label><select id="prioFit"><option value="5">很高</option><option value="4" selected>较高</option><option value="3">一般</option><option value="2">偏低</option><option value="1">很低</option></select></div><div><label>成长性</label><select id="prioGrowth"><option value="5">很高</option><option value="4" selected>较高</option><option value="3">一般</option><option value="2">偏低</option><option value="1">很低</option></select></div><div><label>硬性门槛</label><select id="prioBarrier"><option value="5">门槛很低</option><option value="4">较可达</option><option value="3" selected>一般</option><option value="2">偏高</option><option value="1">明显不符</option></select></div></div>
+              <div class="form-row-3"><div><label>城市/通勤</label><select id="prioCity"><option value="5">非常合适</option><option value="4" selected>较合适</option><option value="3">一般</option><option value="2">较不便</option><option value="1">不可接受</option></select></div><div><label>投递成本</label><select id="prioCost"><option value="5">很低</option><option value="4" selected>较低</option><option value="3">一般</option><option value="2">较高</option><option value="1">很高</option></select></div><div><label>求职目标一致性</label><select id="prioGoal"><option value="5">非常一致</option><option value="4" selected>较一致</option><option value="3">一般</option><option value="2">较弱</option><option value="1">不一致</option></select></div></div>
+              <button class="btn btn-primary" onclick="analyzePriority()" style="margin-top:14px">生成优先级判断</button>
+            </div>
+            <div class="tool-box light" id="priorityOutput">
+              <h3>判断结果</h3>
+              <p>将输出投递优先级、投入建议和注意事项。</p>
+              <div class="notice">请填写岗位信息后点击生成。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-jd">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>JD 智能解析 + ATS 关键词</h3>
+              <p>解析岗位职责、要求、加分项、硬性条件、风险点，并提取 ATS 关键词。</p>
+              <label>岗位 JD</label>
+              <textarea id="jdInput" placeholder="粘贴任意岗位 JD：技术、运营、产品、市场、设计、金融、职能均可"></textarea>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="parseJD()">开始解析 JD</button><button class="btn btn-ghost" onclick="fillJDDemo()">填充样例 JD</button><button class="btn btn-soft" onclick="clearField('jdInput')">清空</button></div>
+            </div>
+            <div class="tool-box light" id="jdOutput">
+              <h3>解析结果</h3>
+              <p>等待输入 JD。</p>
+              <div class="notice">建议粘贴完整 JD，包括岗位职责、任职要求、工作地点和实习/入职条件。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-match">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>简历匹配度评估</h3>
+              <p>根据 JD 和简历内容输出综合评分、维度评分、优势、缺口和行动建议。</p>
+              <label>岗位 JD</label><textarea id="matchJD" placeholder="可从 JD 解析模块复制，也可直接粘贴岗位 JD"></textarea>
+              <label>个人简历 / 经历摘要</label><textarea id="resumeInput" placeholder="粘贴简历内容、项目经历、教育背景、技能等"></textarea>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="analyzeMatch()">生成匹配报告</button><button class="btn btn-ghost" onclick="fillMatchDemo()">填充样例</button></div>
+            </div>
+            <div class="tool-box light" id="matchOutput">
+              <h3>匹配报告</h3><p>等待生成。</p><div class="notice">评分为 Demo 规则模拟，真实版本应接入模型与人工评估进行校准。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-resume">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>简历 Bullet 优化器</h3>
+              <p>把普通经历表述转为更有证据感、岗位匹配度更高的表达。</p>
+              <div class="notice">优化原则：只基于用户已有经历进行表达增强，不虚构公司、项目、数据、结果和职责。</div>
+              <div class="form-row"><div><label>目标岗位</label><input class="input" id="bulletRole" value="数据分析/运营/产品/市场等通用岗位"></div><div><label>表达风格</label><select id="bulletStyle"><option>专业克制</option><option>结果导向</option><option>应届生友好</option><option>转岗说明型</option><option>技术能力突出型</option></select></div></div>
+              <label>原简历表述</label><textarea id="bulletInput" placeholder="例如：参与项目的数据整理和分析，完成报告撰写。">参与课程项目的数据整理、用户调研和报告撰写，配合团队完成最终展示。</textarea>
+              <button class="btn btn-primary" onclick="optimizeBullet()" style="margin-top:14px">生成优化建议</button>
+            </div>
+            <div class="tool-box light" id="bulletOutput">
+              <h3>优化结果</h3><p>输出三种可选表达，并标注不可虚构部分。</p><div class="notice">优化只增强表达结构，不新增用户没有提供的具体数据和成果。</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-materials">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>求职材料生成器</h3>
+              <p>生成邮件、平台打招呼、Cover Letter、跟进话术和附件命名建议。</p>
+              <div class="form-row"><div><label>目标岗位</label><input class="input" id="matRole" value="数据分析实习生"></div><div><label>公司名称</label><input class="input" id="matCompany" value="某互联网公司"></div></div>
+              <div class="form-row"><div><label>候选人姓名</label><input class="input" id="matName" value="候选人"></div><div><label>作品集/链接</label><input class="input" id="matLink" value="https://your-portfolio-link.com"></div></div>
+              <label>个人亮点</label><textarea id="matHighlights">具备数据分析、项目协作和 AI 工具应用经验；熟悉 Python、SQL、Excel 和可视化工具；能够快速理解业务问题并形成结构化分析报告。</textarea>
+              <div class="form-row"><div><label>材料类型</label><select id="matType"><option>全部生成</option><option>正式邮件</option><option>招聘平台打招呼</option><option>Cover Letter</option><option>三天后跟进话术</option><option>内推请求话术</option><option>附件命名</option></select></div><div><label>语气</label><select id="matTone"><option>专业真诚</option><option>简洁直接</option><option>应届生友好</option><option>社招稳重</option></select></div></div>
+              <button class="btn btn-primary" onclick="generateMaterials()" style="margin-top:14px">生成求职材料</button>
+            </div>
+            <div class="tool-box light" id="materialsOutput"><h3>材料结果</h3><p>等待生成。</p><div class="notice">正式投递前请根据真实经历、岗位名称和公司信息进行人工确认。</div></div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-interview">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>面试准备助手</h3>
+              <p>生成自我介绍、常见面试题、STAR 框架、反问问题和面试前检查清单。</p>
+              <div class="form-row"><div><label>面试岗位</label><input class="input" id="intRole" value="运营/数据/产品/技术通用岗位"></div><div><label>面试阶段</label><select id="intStage"><option>HR 初筛</option><option>业务一面</option><option>专业二面</option><option>终面</option><option>群面/无领导小组</option></select></div></div>
+              <label>简历亮点 / 项目经历</label><textarea id="intResume">参与过课程项目、数据整理、用户调研、竞品分析和报告展示；具备 Python、SQL、Excel、AI 工具使用能力。</textarea>
+              <button class="btn btn-primary" onclick="generateInterview()" style="margin-top:14px">生成面试准备包</button>
+            </div>
+            <div class="tool-box light" id="interviewOutput"><h3>面试准备包</h3><p>等待生成。</p><div class="notice">建议将生成内容进一步替换为自己的真实案例和量化证据。</div></div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="tab-offer">
+          <div class="tool-grid">
+            <div class="tool-box">
+              <h3>Offer / 岗位机会对比</h3>
+              <p>按薪资、成长性、稳定性、岗位匹配、通勤、团队和长期价值进行加权对比。</p>
+              <div class="form-row"><div><label>A 机会名称</label><input class="input" id="offerAName" value="A公司｜数据分析岗"></div><div><label>B 机会名称</label><input class="input" id="offerBName" value="B公司｜运营策略岗"></div></div>
+              <div class="form-row"><div><label>A 评分：薪资/补贴</label><input class="input" type="number" id="aSalary" min="1" max="10" value="7"></div><div><label>B 评分：薪资/补贴</label><input class="input" type="number" id="bSalary" min="1" max="10" value="6"></div></div>
+              <div class="form-row"><div><label>A 评分：成长性</label><input class="input" type="number" id="aGrowth" min="1" max="10" value="8"></div><div><label>B 评分：成长性</label><input class="input" type="number" id="bGrowth" min="1" max="10" value="9"></div></div>
+              <div class="form-row"><div><label>A 评分：岗位匹配</label><input class="input" type="number" id="aFit" min="1" max="10" value="8"></div><div><label>B 评分：岗位匹配</label><input class="input" type="number" id="bFit" min="1" max="10" value="7"></div></div>
+              <div class="form-row"><div><label>A 评分：通勤/城市</label><input class="input" type="number" id="aCity" min="1" max="10" value="7"></div><div><label>B 评分：通勤/城市</label><input class="input" type="number" id="bCity" min="1" max="10" value="8"></div></div>
+              <button class="btn btn-primary" onclick="compareOffers()" style="margin-top:14px">生成对比结论</button>
+            </div>
+            <div class="tool-box light" id="offerOutput"><h3>对比结果</h3><p>等待生成。</p><div class="notice">Offer 决策不应只看分数，还应结合行业周期、团队质量、个人长期目标和生活成本。</div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <section class="section" id="tracker">
+    <div class="container">
+      <div class="section-head">
+        <div><h2>投递记录看板</h2><p class="section-desc">用 LocalStorage 保存求职进度，支持新增、状态更新、删除、筛选和 CSV 导出。适合展示“投递闭环”和“数据复盘意识”。</p></div>
+        <div class="tag-row"><span class="tag">待投递</span><span class="tag">已投递</span><span class="tag">已沟通</span><span class="tag">面试中</span><span class="tag">Offer</span></div>
+      </div>
+      <div class="grid-4" id="trackerStats"></div>
+      <div class="panel-white" style="margin-top:18px">
+        <div class="form-row-3"><div><label>公司</label><input class="input" id="appCompany" placeholder="公司名称"></div><div><label>岗位</label><input class="input" id="appRole" placeholder="岗位名称"></div><div><label>渠道</label><select id="appChannel"><option>官网</option><option>BOSS直聘</option><option>实习僧</option><option>拉勾/猎聘/智联</option><option>邮箱投递</option><option>内推</option><option>LinkedIn</option><option>其他</option></select></div></div>
+        <div class="form-row-3"><div><label>匹配度</label><input class="input" id="appScore" type="number" min="0" max="100" value="80"></div><div><label>状态</label><select id="appStatus"><option>待投递</option><option>已投递</option><option>已沟通</option><option>面试中</option><option>Offer</option><option>已拒绝</option><option>待跟进</option></select></div><div><label>下一步日期</label><input class="input" id="appDate" type="date"></div></div>
+        <label>下一步行动 / 备注</label><textarea id="appNote" placeholder="例如：三天后跟进 HR；准备业务一面；补充作品集链接。" style="min-height:88px"></textarea>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary" onclick="addApplication()">新增记录</button><button class="btn btn-ghost" onclick="addSampleApps()">填充样例</button><button class="btn btn-soft" onclick="exportCSV()">导出 CSV</button><button class="btn btn-gold" onclick="clearApps()">清空看板</button></div>
+      </div>
+      <div class="panel-white" style="margin-top:18px">
+        <div class="form-row"><div><label>搜索公司/岗位</label><input class="input" id="appSearch" placeholder="输入关键词" oninput="renderApps()"></div><div><label>状态筛选</label><select id="appFilter" onchange="renderApps()"><option>全部</option><option>待投递</option><option>已投递</option><option>已沟通</option><option>面试中</option><option>Offer</option><option>已拒绝</option><option>待跟进</option></select></div></div>
+        <div class="table-wrap" style="margin-top:16px"><table><thead><tr><th>公司</th><th>岗位</th><th>渠道</th><th>匹配度</th><th>状态</th><th>下一步</th><th>跟进优先级</th><th>备注</th><th>操作</th></tr></thead><tbody id="appTable"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="metrics">
+    <div class="container">
+      <div class="section-head"><div><h2>指标体系与产品评估</h2><p class="section-desc">作为 AI 产品作品集，指标不能只写结果转化，还要说明当前 Demo 能验证什么、后续上线需要通过什么方式验证。</p></div></div>
+      <div class="grid-3">
+        <div class="card"><div class="icon">⚡</div><h3>效率指标</h3><ul class="list-clean"><li>JD 解析耗时</li><li>简历匹配分析耗时</li><li>投递文案生成耗时</li><li>单个岗位投递准备时间</li></ul></div>
+        <div class="card"><div class="icon">✅</div><h3>质量指标</h3><ul class="list-clean"><li>虚构经历检出率</li><li>夸大表达检出率</li><li>岗位关键词遗漏率</li><li>输出结构合规率</li><li>简历建议可采纳率</li></ul></div>
+        <div class="card"><div class="icon">📈</div><h3>结果指标</h3><ul class="list-clean"><li>投递数量</li><li>HR 回复数量</li><li>面试邀约数量</li><li>Offer 数量</li><li>不同渠道投递转化率</li></ul><div class="notice" style="margin-top:12px">结果指标后续依赖用户手动记录或真实埋点验证，当前 Demo 不虚构真实转化数据。</div></div>
+      </div>
+      <div class="feature-large" style="margin-top:18px">
+        <div class="quote"><h3>AI 产品设计重点</h3><p>真正的 AI 求职产品不是“让模型随便生成一段话”，而是将模型能力拆解到业务流程中，通过输入约束、Prompt 模板、输出自检、风险提示和行为数据形成可控闭环。</p></div>
+        <div class="panel-white"><h3>关键埋点设计</h3><div class="table-wrap"><table><thead><tr><th>行为</th><th>事件名</th><th>核心字段</th></tr></thead><tbody><tr><td>解析 JD</td><td>jd_parse_submit</td><td>岗位类型、文本长度、解析是否成功</td></tr><tr><td>复制文案</td><td>material_copy</td><td>材料类型、岗位方向、复制次数</td></tr><tr><td>新增投递</td><td>application_create</td><td>渠道、状态、匹配度、岗位类型</td></tr><tr><td>状态更新</td><td>pipeline_update</td><td>原状态、新状态、间隔天数</td></tr></tbody></table></div></div>
+      </div>
+      <div class="panel-white" style="margin-top:18px">
+        <h3>指标验证口径表</h3>
+        <div class="table-wrap"><table><thead><tr><th>指标名称</th><th>当前 Demo 是否可验证</th><th>后续上线验证方式</th></tr></thead><tbody>
+          <tr><td>JD 解析耗时</td><td>可部分验证</td><td>记录点击解析到结果生成的时间</td></tr>
+          <tr><td>文案复制次数</td><td>可验证</td><td>复制按钮埋点，统计材料类型和复制次数</td></tr>
+          <tr><td>投递记录新增数</td><td>可验证</td><td>LocalStorage 行为记录或后端事件记录</td></tr>
+          <tr><td>投递状态更新次数</td><td>可验证</td><td>状态变更事件记录，统计原状态、新状态和间隔天数</td></tr>
+          <tr><td>HR 回复数量</td><td>暂不可验证</td><td>用户手动更新状态，或后续接入邮箱/招聘平台数据</td></tr>
+          <tr><td>面试邀约数量</td><td>暂不可验证</td><td>用户手动记录或后续接入提醒与日历</td></tr>
+          <tr><td>Offer 数量</td><td>暂不可验证</td><td>用户手动记录结果，后续结合投递漏斗复盘</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="prompt">
+    <div class="container">
+      <div class="section-head"><div><h2>Prompt 与安全边界设计</h2><p class="section-desc">通过结构化 Prompt 约束输出，降低泛泛而谈、遗漏关键词、虚构经历和过度营销的问题。</p></div></div>
+      <div class="principle-grid">
+        <div class="principle"><b>角色限定</b><span>明确模型身份，如招聘分析助手、AI 求职顾问。</span></div>
+        <div class="principle"><b>输入边界</b><span>只基于 JD 和简历原文，不添加不存在信息。</span></div>
+        <div class="principle"><b>输出格式</b><span>固定字段、评分表和建议清单，提升可读性。</span></div>
+        <div class="principle"><b>风险约束</b><span>禁止虚构经历、夸大成果和编造数据。</span></div>
+        <div class="principle"><b>自检机制</b><span>生成后检查关键词遗漏、结构缺失和过度营销。</span></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><h3>JD 解析 Prompt</h3><p class="copy-text">你是一名求职分析助手。请只基于用户输入的岗位 JD 提取岗位画像、硬性要求、软性能力、关键词和风险点，不补充 JD 中不存在的信息。</p><div class="prompt-meta"><div><b>输入变量：</b>岗位 JD</div><div><b>输出字段：</b>岗位名称、岗位类型、核心任务、硬性要求、加分项、风险点</div><div><b>风险控制点：</b>不得添加 JD 中不存在的事实</div></div></div>
+        <div class="card"><h3>简历匹配 Prompt</h3><p class="copy-text">请根据岗位 JD 与用户简历，按岗位职责、产品/业务能力、AI 相关能力、数据技术理解和实习条件进行评分，并展示匹配证据和能力缺口。</p><div class="prompt-meta"><div><b>输入变量：</b>岗位 JD、用户简历、求职画像</div><div><b>输出字段：</b>维度分数、匹配证据、能力缺口、投递建议</div><div><b>风险控制点：</b>所有结论必须引用用户已有经历</div></div></div>
+        <div class="card"><h3>材料生成 Prompt</h3><p class="copy-text">请生成求职邮件、平台打招呼、Cover Letter 和跟进话术。语气专业真诚，突出岗位匹配点，不新增用户未提供的项目和数据。</p><div class="prompt-meta"><div><b>输入变量：</b>目标岗位、公司名称、用户亮点、作品集链接</div><div><b>输出字段：</b>邮件主题、正文、打招呼话术、附件命名</div><div><b>风险控制点：</b>不使用夸张营销语，不虚构成果</div></div></div>
+        <div class="card"><h3>输出自检 Prompt</h3><p class="copy-text">请检查输出是否存在虚构经历、夸大结果、关键词遗漏、语气不专业、结构不完整和隐私泄露风险，并给出修改建议。</p><div class="prompt-meta"><div><b>输入变量：</b>上一步生成内容、JD、用户简历</div><div><b>输出字段：</b>风险项、修改建议、是否可用于正式投递</div><div><b>风险控制点：</b>优先保证真实性和正式投递安全</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="review">
+    <div class="container">
+      <div class="section-head"><div><h2>项目复盘：为什么这个 Demo 更像真实 AI 产品</h2><p class="section-desc">这版作品集不仅展示页面开发能力，更展示对求职场景、AI 工作流、产品指标、MVP 边界和面试追问的准备。</p></div></div>
+      <div class="grid-3">
+        <div class="card"><div class="icon">🧩</div><h3>MVP 边界</h3><p>当前版本采用 HTML、CSS、JavaScript 和 LocalStorage 实现，不接入真实大模型 API，不上传用户隐私数据，适合作为作品集静态可交互 Demo。</p></div>
+        <div class="card"><div class="icon">🚀</div><h3>后续迭代</h3><p>可接入真实模型、岗位数据库、简历文件解析、多版本简历管理、日历提醒、邮件插件、面试录音复盘和团队协作功能。</p></div>
+        <div class="card"><div class="icon">🎓</div><h3>作品集价值</h3><p>能够体现需求拆解、场景抽象、竞品定位、AI Prompt 设计、交互设计、指标体系和快速落地能力。</p></div>
+      </div>
+      <div class="qa-list">
+        <div class="qa-card"><h3>这个项目和 ChatGPT 有什么区别？</h3><p>ChatGPT 是通用 AI 工具，用户需要自己组织 Prompt 和判断输出质量。本项目将求职流程拆解为画像配置、JD 解析、简历匹配、材料生成、投递管理和复盘分析，通过结构化输入、固定输出字段、评分逻辑和自检机制降低使用门槛。</p></div>
+        <div class="qa-card"><h3>匹配度评分如何保证可信？</h3><p>第一版采用规则化权重和模拟样例，核心是验证产品流程；后续可通过 JD 关键词提取、简历证据匹配和用户反馈数据优化评分模型。页面会展示评分依据、匹配证据和能力缺口，避免黑箱评分。</p></div>
+        <div class="qa-card"><h3>如何避免 AI 虚构经历？</h3><p>在 Prompt 层限制“只基于用户已有经历生成”，在输出层增加自检 Prompt，在交互层提示用户不得将虚构内容写入简历，并通过真实性约束标注风险。</p></div>
+        <div class="qa-card"><h3>为什么第一版不接真实大模型 API？</h3><p>第一版重点验证产品流程、页面交互和信息架构，使用模拟数据降低开发复杂度。后续可接入大模型 API，实现真实 JD 解析和文案生成，同时补充日志、埋点和输出质量评估。</p></div>
+      </div>
+      <div class="notice" style="margin-top:18px">本作品为个人 AI 产品作品集 Demo，用于展示 AI 产品设计、需求拆解、竞品分析、Prompt 设计、指标体系、交互设计与快速落地能力。当前版本采用模拟数据和规则化逻辑展示核心流程，暂未接入真实大模型 API 和真实用户数据，不代表商业化上线产品。</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <b>AI Career Copilot｜AI Job Workflow Demo</b>
+      <p>面向所有求职者的全流程 AI 求职助手：岗位筛选、JD 解析、ATS 优化、简历匹配、材料生成、面试准备、投递管理与结果复盘。</p>
+    </div>
+  </footer>
+  <div class="toast" id="toast">已完成</div>
+
+  <script>
+    const $ = (id)=>document.getElementById(id);
+    const get = (id)=>($(id)?.value || '').trim();
+    const safe = (str)=>String(str||'').replace(/[&<>"]/g, s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    const cnDate = ()=> new Date().toISOString().slice(0,10);
+    const statusList = ['待投递','已投递','已沟通','面试中','Offer','已拒绝','待跟进'];
+    let apps = JSON.parse(localStorage.getItem('careerCopilotApps')||'null');
+    if(apps===null){ apps=sampleApps(); localStorage.setItem('careerCopilotApps', JSON.stringify(apps)); }
+    let profile = JSON.parse(localStorage.getItem('careerCopilotProfile')||'null');
+
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+        btn.classList.add('active');
+        $('tab-'+btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    function toast(msg='已完成'){
+      const t=$('toast'); t.textContent=msg; t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),1800);
+    }
+    function clearField(id){ $(id).value=''; }
+    function demoNote(){ return '<div class="demo-note">模拟 AI 输出结果，仅用于 Demo 展示。</div>'; }
+    function sampleApps(){ const today=cnDate(); const d=(n)=>{ const x=new Date(); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); }; return [
+      {id:Date.now()+1,company:'小米',role:'AI 产品实习生',channel:'官网',score:86,status:'已投递',date:d(3),note:'3 天后跟进'},
+      {id:Date.now()+2,company:'百度',role:'医疗智能体产品实习',channel:'BOSS直聘',score:82,status:'已沟通',date:today,note:'准备面试问题'},
+      {id:Date.now()+3,company:'Shopee',role:'电商用户产品实习',channel:'内推',score:78,status:'待投递',date:d(5),note:'优化电商项目表达'}
+    ]; }
+    function followPriority(date,status){ const today=new Date(cnDate()); const d=new Date(date||cnDate()); const diff=Math.ceil((d-today)/(1000*60*60*24)); if(status==='Offer'||status==='已拒绝') return ['暂不需跟进','']; if(diff<=0) return ['今天需跟进','now']; if(diff<=3) return ['3 天内跟进','soon']; return ['暂不需跟进','']; }
+    function kw(text, words){ text=text.toLowerCase(); return words.filter(w=>text.includes(w.toLowerCase())); }
+    function unique(arr){ return [...new Set(arr.filter(Boolean))]; }
+    function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+    function weightedScore(items){ return Math.round(items.reduce((s,i)=>s+i.value*i.weight,0)); }
+
+    function saveProfile(){
+      profile={stage:get('profileStage'), role:get('profileRole'), city:get('profileCity'), time:get('profileTime'), skills:get('profileSkills')};
+      localStorage.setItem('careerCopilotProfile', JSON.stringify(profile));
+      renderProfile(); toast('画像已保存');
+    }
+    function fillProfileDemo(){
+      $('profileStage').value='应届生'; $('profileRole').value='不限/多方向'; $('profileCity').value='北京 / 上海 / 深圳 / 杭州 / 远程'; $('profileTime').value='可尽快到岗，优先长期实习或全职机会'; $('profileSkills').value='具备课程项目、数据分析、用户调研、文档撰写、团队协作和 AI 工具使用经验；熟悉 Python、SQL、Excel、可视化工具，可根据岗位 JD 快速调整简历表达。';
+      saveProfile();
+    }
+    function renderProfile(){
+      if(!profile){
+        $('profileOutput').innerHTML=`<h3>示例画像摘要</h3>${demoNote()}<div class="result-card"><div class="kv"><b>当前身份</b><span>研究生 / 应届生</span></div><div class="kv"><b>目标方向</b><span>AI 产品、数据产品、金融科技产品</span></div><div class="kv"><b>目标城市</b><span>上海 / 杭州 / 远程</span></div><div class="kv"><b>核心经历</b><span>产品实习、课程项目、数据分析、AI 工具使用</span></div><div class="kv"><b>求职阶段</b><span>正在投递实习岗位</span></div><div class="kv"><b>输出约束</b><span>不虚构经历、不夸大数据、不编造项目成果</span></div></div><div class="notice">建议先保存自己的真实画像，再进入 JD 解析、简历匹配和材料生成。</div>`;
+        return;
+      }
+      $('profileOutput').innerHTML=`<h3>画像摘要</h3>${demoNote()}<div class="result-card"><div class="kv"><b>当前身份</b><span>${safe(profile.stage)}</span></div><div class="kv"><b>目标方向</b><span>${safe(profile.role)}</span></div><div class="kv"><b>目标城市</b><span>${safe(profile.city)}</span></div><div class="kv"><b>到岗时间</b><span>${safe(profile.time)}</span></div><div class="kv"><b>能力摘要</b><span>${safe(profile.skills)}</span></div><div class="kv"><b>输出约束</b><span>不虚构经历、不夸大数据、不编造项目成果</span></div></div><div class="result-card darkish"><b>使用建议</b><ul class="list-clean"><li>后续材料生成会默认突出与你目标方向相关的能力。</li><li>跨行业求职时，建议补充“可迁移能力”和“过往成果证据”。</li><li>正式投递前应删除隐私信息，如身份证号、详细住址等。</li></ul></div>`;
+    }
+
+    function analyzePriority(){
+      const vals=['prioFit','prioGrowth','prioBarrier','prioCity','prioCost','prioGoal'].map(id=>Number(get(id)));
+      const score=Math.round((vals[0]*.24+vals[1]*.22+vals[2]*.18+vals[3]*.12+vals[4]*.1+vals[5]*.14)*20);
+      let level=score>=85?'S 级优先投递':score>=72?'A 级建议投递':score>=58?'B 级谨慎投递':'C 级低优先级';
+      let advice=score>=72?'建议优先准备定制简历和求职材料，并加入投递看板跟进。':score>=58?'可以投递，但不建议投入过多定制成本，优先补足关键能力证据。':'不建议作为主投方向，可作为信息收集或低成本尝试。';
+      $('priorityOutput').innerHTML=`<h3>判断结果</h3>${demoNote()}<div class="score-layout result-card"><div class="score-ring" style="--score:${score}"><span>${score}</span></div><div><h3>${safe(level)}</h3><p>${safe(advice)}</p><div class="progress"><i style="width:${score}%"></i></div><p style="margin-top:10px;color:#64748b">岗位：${safe(get('prioName'))}</p></div></div><div class="result-card"><b>判断依据</b><ul class="list-clean"><li>匹配度与成长性权重最高，决定是否值得重点投入。</li><li>硬性门槛若明显不符，应降低优先级或先补材料证据。</li><li>城市、通勤和投递成本影响机会的实际可执行性。</li></ul></div>`;
+    }
+
+    function fillJDDemo(){
+      $('jdInput').value='岗位名称：数据分析实习生\n工作地点：上海，可实习 4 天/周，至少 3 个月。\n岗位职责：1. 负责业务数据整理、指标看板维护和日报周报输出；2. 支持用户增长、转化漏斗、活动效果等分析；3. 与产品、运营、技术团队协作，定位业务问题并提出优化建议；4. 使用 SQL、Excel、Python 或 BI 工具完成数据提取和可视化。\n任职要求：统计学、计算机、信息管理、经济管理等相关专业优先；熟悉 SQL、Excel，了解 Python 加分；具备良好的逻辑思维、沟通能力和数据敏感度；有互联网、电商、内容、金融相关项目经验优先。';
+      toast('已填充 JD 样例');
+    }
+    function parseJD(){
+      const text=get('jdInput');
+      if(text.length<30){ $('jdOutput').innerHTML='<h3>岗位画像卡片</h3>'+demoNote()+'<div class="notice">JD 内容过短，请补充岗位职责、任职要求、地点、时间和硬性条件。</div>'; return; }
+      const title=(text.match(/岗位名称[:：]?\s*([^\n。]+)/)||text.match(/招聘(.{2,18}?)(实习生|工程师|专员|经理|分析师|运营|设计师)/)||[])[1]||'未明确岗位名称';
+      const city=(text.match(/工作地点[:：]?\s*([^\n。]+)/)||text.match(/(北京|上海|深圳|广州|杭州|成都|南京|武汉|远程)/)||[])[1]||'未明确';
+      const roleType=detectRole(text);
+      const hard=kw(text,['SQL','Python','Excel','Java','JavaScript','数据分析','机器学习','AIGC','AI','Prompt','PRD','Figma','Axure','Tableau','Power BI','统计','英语','CET','实习','本科','硕士']);
+      const soft=kw(text,['沟通','协作','逻辑','学习能力','责任心','抗压','表达','执行','复盘','项目管理','跨部门']);
+      const tasks=unique(kw(text,['需求分析','Prompt','数据复盘','功能迭代','指标看板','用户增长','转化漏斗','用户调研','竞品分析','项目推进','业务分析','内容治理','客户沟通','数据提取','可视化']));
+      const bonus=unique(kw(text,['大模型','智能体','AIGC','作品集','SQL','Python','电商','金融','医疗','B端','SaaS','海外','英语','数据分析','实习经验']));
+      const risk=[];
+      if(!/(地点|城市|远程|北京|上海|深圳|广州|杭州)/.test(text)) risk.push('工作地点不明确');
+      if(!/(天\/周|每周|至少|个月|全职|实习周期|到岗)/.test(text)) risk.push('到岗时间或实习周期不明确');
+      if(/压力|加班|快节奏|高强度/.test(text)) risk.push('可能存在高强度工作节奏');
+      if(/985|211|硕士|博士/.test(text)) risk.push('存在学历或院校偏好，需要确认自身是否满足');
+      const ats=unique([...hard,...soft,...tasks,...kw(text,['增长','转化','漏斗','用户','运营','产品','风控','销售','市场','设计','研发','测试','数据看板','内容治理','客户成功','CRM','供应链'])]);
+      const riskTip=/(AI|AIGC|大模型|Prompt|智能体|LLM)/i.test(text)?'该岗位对 AI 产品实践和数据分析能力要求较高。如果简历中缺少 AI 项目或 Prompt 设计经历，建议先补充 AI 求职投递助手项目后再投递。':'该岗位需要将 JD 中的硬性条件与自身经历逐项核对；如果核心技能或实习周期不匹配，建议先补强材料后再投递。';
+      $('jdOutput').innerHTML=`<h3>岗位画像卡片</h3>${demoNote()}<div class="result-card"><div class="kv"><b>岗位名称</b><span>${safe(title)}</span></div><div class="kv"><b>岗位类型</b><span>${roleType}</span></div><div class="kv"><b>工作地点</b><span>${safe(city)}</span></div><div class="kv"><b>核心任务</b><span>${tasks.length?tasks.map(x=>`<span class="pill">${safe(x)}</span>`).join(''):'<span class="pill warn">需根据完整 JD 补充判断</span>'}</span></div><div class="kv"><b>硬性要求</b><span>${hard.length?hard.map(x=>`<span class="pill">${safe(x)}</span>`).join(''):'<span class="pill warn">未识别到明确硬技能</span>'}</span></div><div class="kv"><b>软性能力</b><span>${soft.length?soft.map(x=>`<span class="pill blue">${safe(x)}</span>`).join(''):'<span class="pill warn">未识别到明确软能力</span>'}</span></div><div class="kv"><b>加分项</b><span>${bonus.length?bonus.map(x=>`<span class="pill">${safe(x)}</span>`).join(''):'<span class="pill warn">未识别到明确加分项</span>'}</span></div><div class="kv"><b>风险点</b><span>${(risk.length?risk:['未发现明显风险，但仍需核对岗位真实性、实习周期、薪资和转正机会。']).map(x=>`<span class="pill warn">${safe(x)}</span>`).join('')}</span></div><div class="kv"><b>关键词</b><span>${ats.length?ats.map(x=>`<span class="pill">${safe(x)}</span>`).join(''):'建议补充完整 JD 后提取。'}</span></div></div><div class="result-card darkish"><b>投递风险提示</b><p>${safe(riskTip)}</p></div><div class="result-card"><b>下一步建议</b><ul class="list-clean"><li>将关键词自然嵌入简历经历和技能区，不要机械堆砌。</li><li>针对核心任务准备 1—2 个真实项目证据。</li><li>进入“简历匹配”模块，进一步判断是否值得定制投递材料。</li></ul></div>`;
+      $('matchJD').value=text;
+      toast('JD 解析完成');
+    }
+    function detectRole(text){
+      const map=[['技术/研发/测试',/Java|Python|前端|后端|算法|测试|开发|工程师|架构|运维/],['数据分析/算法/BI',/数据分析|SQL|BI|指标|看板|统计|算法|机器学习|建模/],['产品/项目管理',/产品|PRD|需求|原型|Axure|Figma|项目管理|用户体验/],['运营/内容/策略',/运营|内容|策略|活动|增长|转化|用户|社群/],['市场/品牌/销售',/市场|品牌|销售|商务|客户|CRM|渠道/],['设计/创意',/设计|视觉|UI|UX|平面|视频|剪辑/],['金融/风控/财务',/金融|风控|财务|会计|审计|投研|证券|银行/],['职能/人力/行政',/人力|行政|招聘|HR|组织|培训/]];
+      return (map.find(m=>m[1].test(text))||['通用岗位'])[0];
+    }
+    function fillMatchDemo(){
+      fillJDDemo(); $('matchJD').value=$('jdInput').value; $('resumeInput').value='教育背景：管理科学与工程相关专业，学习 Python 数据分析、数据库、运筹学、数据挖掘等课程。\n项目经历：参与课程项目，完成用户调研、竞品分析、数据整理、指标分析、报告撰写和展示。\n技能：熟悉 Excel、SQL 基础、Python 数据处理与可视化，能够使用 AI 工具辅助资料整理、文本生成和分析报告。\n求职条件：可每周实习 4 天，能长期稳定参与项目。'; toast('已填充匹配样例'); }
+    function analyzeMatch(){
+      const jd=get('matchJD'), resume=get('resumeInput');
+      if(jd.length<30 || resume.length<30){ $('matchOutput').innerHTML='<h3>匹配报告</h3>'+demoNote()+'<div class="notice">请同时补充较完整的岗位 JD 和简历内容。</div>'; return; }
+      const hard=['SQL','Python','Excel','Java','数据分析','AI','Prompt','Figma','Axure','Tableau','Power BI','统计','项目','运营','产品','销售','设计','PRD','原型'];
+      const jdHard=kw(jd,hard), resHard=kw(resume,hard);
+      const overlap=jdHard.filter(x=>resHard.includes(x));
+      const missing=jdHard.filter(x=>!resHard.includes(x));
+      const hasProduct=/PRD|原型|需求|产品|流程|功能|用户调研|竞品/.test(resume);
+      const hasAI=/AI|AIGC|Prompt|大模型|智能体|Copilot/.test(resume);
+      const condition=/(4 天|4天|长期|尽快|每周|实习)/.test(resume+jd)?80:68;
+      const dim=[
+        ['岗位职责匹配', clamp(72+overlap.length*4+(/实习|项目|负责|参与|完成/.test(resume)?8:0),0,100), '有产品实习、需求分析、流程梳理经历', '缺少上线后数据复盘'],
+        ['产品能力', hasProduct?86:76, hasProduct?'有 PRD、原型、功能规划经历':'有项目协作和文档表达基础', '需要展示更完整产品文档'],
+        ['AI 相关能力', hasAI?78:65, hasAI?'有 AI 求职助手 Demo 和 Prompt 设计':'AI 项目证据较少', '缺少真实 API 接入经验'],
+        ['数据技术理解', (resHard.includes('Python')||resHard.includes('SQL'))?82:72, '有 Python、SQL、MySQL 基础', '缺少指标分析案例'],
+        ['实习条件匹配', condition, condition>=80?'学生身份和实习意愿明确':'实习时间或到岗条件不完整', '到岗时间需要补充']
+      ];
+      const score=weightedScore([{value:dim[0][1],weight:.3},{value:dim[1][1],weight:.25},{value:dim[2][1],weight:.2},{value:dim[3][1],weight:.15},{value:dim[4][1],weight:.1}]);
+      const pri=score>=85?['高优先级','建议尽快投递，并同步准备面试项目讲述。','priority-chip']:score>=70?['中优先级','建议优化材料后投递，重点补强 AI 项目、Prompt 设计和指标复盘表达。','priority-chip mid']:score>=55?['低优先级','需要补强经历或谨慎投递，避免把时间投入在明显不匹配岗位。','priority-chip low']:['暂不建议投递','当前匹配度偏低，建议先补充核心技能或选择更匹配岗位。','priority-chip low'];
+      const ats=Math.round((overlap.length/(jdHard.length||1))*100);
+      $('matchOutput').innerHTML=`<h3>匹配报告</h3>${demoNote()}<div class="score-layout result-card"><div class="score-ring" style="--score:${score}"><span>${score}</span></div><div><h3>${pri[0]}｜综合匹配分 ${score}</h3><p>ATS 关键词覆盖度：${ats}%</p><div class="progress"><i style="width:${score}%"></i></div><p style="margin-top:10px;color:#64748b">${safe(pri[1])}</p></div></div><div class="result-card"><b>匹配证据链</b><div class="table-wrap"><table class="evidence-table"><thead><tr><th>评分维度</th><th>分数</th><th>匹配证据</th><th>能力缺口</th></tr></thead><tbody>${dim.map(d=>`<tr><td>${safe(d[0])}</td><td>${Math.round(d[1])}</td><td>${safe(d[2])}</td><td>${safe(d[3])}</td></tr>`).join('')}</tbody></table></div></div><div class="result-card"><b>关键词命中情况</b><p>已命中：${overlap.length?overlap.map(x=>`<span class="pill">${safe(x)}</span>`).join(''):'暂未明显命中，请补充简历技能区。'}</p><p style="margin-top:8px">待补强：${missing.length?missing.map(x=>`<span class="pill warn">${safe(x)}</span>`).join(''):'核心关键词覆盖较完整。'}</p></div><div class="result-card darkish"><b>投递建议</b><p><span class="${pri[2]}">${pri[0]}</span></p><ul class="list-clean"><li>当前岗位为${pri[0]}，原因是岗位要求与简历关键词、项目证据和实习条件存在上述匹配关系。</li><li>下一步建议：优化 AI 产品项目表达，补充 Prompt 设计、输出自检、指标体系和 Demo 落地能力。</li><li>不要只看总分，应结合匹配证据和能力缺口决定是否投入定制材料。</li></ul></div>`;
+      toast('匹配报告已生成');
+    }
+    function bar(name,val){return `<div style="margin:12px 0"><div style="display:flex;justify-content:space-between;font-weight:900;font-size:13px"><span>${name}</span><span>${Math.round(val)}%</span></div><div class="progress"><i style="width:${Math.round(val)}%"></i></div></div>`}
+
+    function optimizeBullet(){
+      const raw=get('bulletInput'), role=get('bulletRole'), style=get('bulletStyle');
+      if(raw.length<10){$('bulletOutput').innerHTML='<h3>优化结果</h3>'+demoNote()+'<div class="notice">请输入一条较完整的原简历表述。</div>';return}
+      const after1=`围绕${role}相关任务，参与完成资料收集、信息整理、问题拆解与结果汇报，配合团队形成可用于决策或展示的分析材料。`;
+      const after2=`基于目标岗位关键词，梳理项目中的调研、分析、文档和协作产出，将分散经历转化为更贴近 JD 的能力证据。`;
+      const after3=`在项目中负责基础数据整理、用户/业务信息归纳和报告撰写，使用表格、图表或结构化文档呈现关键发现，提升团队沟通和复盘效率。`;
+      $('bulletOutput').innerHTML=`<h3>优化结果</h3>${demoNote()}<div class="truth-tags"><span>表达优化</span><span>岗位关键词补强</span><span>结果导向增强</span></div><div class="notice">优化原则：只基于用户已有经历进行表达增强，不虚构公司、项目、数据、结果和职责。</div><div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>原表述</th><th>问题分析</th><th>优化后表述</th></tr></thead><tbody><tr><td>${safe(raw)}</td><td>表达较泛，缺少任务背景、个人动作、方法工具和结果价值。</td><td>${safe(after1)}</td></tr><tr><td>${safe(raw)}</td><td>可增强岗位关键词和能力证据，但不能新增未提供的数据。</td><td>${safe(after2)}</td></tr><tr><td>${safe(raw)}</td><td>${safe(style)}风格下，应突出结构化分析与协作产出。</td><td>${safe(after3)}</td></tr></tbody></table></div><div class="result-card"><b>不可虚构提醒</b><ul class="list-clean"><li>如果没有真实数据，不要写“提升 30%”“增长 2 倍”等量化结果。</li><li>如果只是参与，不要写成“主导”“独立负责”。</li><li>如果没有使用某工具，不要为了匹配 JD 强行加入。</li></ul></div>`;
+      toast('简历优化完成');
+    }
+
+    function generateMaterials(){
+      const role=get('matRole'), company=get('matCompany'), name=get('matName'), link=get('matLink'), h=get('matHighlights'), tone=get('matTone');
+      const email=`邮件主题：应聘${company}${role}｜${name}\n\n您好，\n\n我关注到贵司正在招聘${role}，结合岗位要求，我认为自己在相关项目经历、数据/业务分析、沟通协作和快速学习方面与岗位较为匹配。\n\n我的主要优势包括：${h}\n\n附件中包含我的简历，如方便的话，也欢迎查看我的作品集：${link}\n\n期待有机会进一步沟通，感谢您的时间。\n\n${name}`;
+      const boss=`您好，我正在关注${company}的${role}机会。我的背景与岗位要求中涉及的分析、协作和执行能力较为匹配，具备相关项目经验和工具基础。已准备好简历和作品集，期待能进一步沟通岗位需求。`;
+      const cover=`尊敬的招聘团队：\n\n我希望申请${company}${role}。我对该岗位的理解是：候选人需要快速理解业务目标，拆解任务要求，并通过数据、项目或沟通协作推动结果落地。基于我的经历，我能够在信息整理、问题分析、文档表达和跨团队协作中提供稳定支持。\n\n我不会夸大自己的经历，但会基于已有项目持续补强岗位所需能力。希望有机会加入团队进一步学习和贡献。`;
+      const follow=`您好，我是${name}。我在前几天投递了${company}${role}岗位，想礼貌跟进一下投递进展。我的简历和岗位要求在项目协作、数据/业务分析和学习能力方面较为匹配。如需要补充材料或作品集，我可以及时提供。感谢您的时间。`;
+      const referral=`您好，打扰了。我正在关注${company}${role}岗位，想请教是否方便了解该岗位的团队职责和候选人要求。我已准备好简历和作品集，如果您觉得合适，也希望有机会获得内推或建议。非常感谢。`;
+      const file=`${name}_${company}_${role}_简历.pdf\n${name}_${role}_作品集.pdf\n${name}_CoverLetter_${company}.pdf`;
+      let blocks={
+        '正式邮件':email,
+        '招聘平台打招呼':boss,
+        'Cover Letter':cover,
+        '三天后跟进话术':follow,
+        '内推请求话术':referral,
+        '附件命名':file
+      };
+      const type=get('matType');
+      const keys=type==='全部生成'?Object.keys(blocks):[type];
+      $('materialsOutput').innerHTML='<h3>材料结果</h3>'+demoNote()+keys.map(k=>`<div class="result-card copyable"><button class="copy-btn" onclick="copyText(this)">复制</button><b>${k}</b><div class="copy-text">${safe(blocks[k])}</div></div>`).join('')+`<div class="notice">当前语气：${safe(tone)}。正式发送前请替换真实姓名、岗位名称、附件和链接。</div>`;
+      toast('求职材料已生成');
+    }
+    function copyText(btn){
+      const text=btn.parentElement.querySelector('.copy-text').innerText;
+      navigator.clipboard?.writeText(text); toast('已复制');
+    }
+
+    function generateInterview(){
+      const role=get('intRole'), stage=get('intStage'), resume=get('intResume');
+      const intro=`您好，我目前正在应聘${role}。我的经历主要包括项目协作、资料整理、数据/业务分析和结果汇报。过往项目中，我习惯先明确目标和评价标准，再拆解任务、整理信息、形成结论，并通过文档或展示推动团队沟通。结合该岗位要求，我希望进一步发挥自己的学习能力、执行能力和结构化分析能力。`;
+      const qs=['请做一个 1 分钟自我介绍。','为什么选择这个岗位/行业？','讲一个你通过分析发现问题并推动解决的经历。','当任务目标不明确时，你会如何推进？','你如何处理团队协作中的分歧？','你的短板是什么，如何改进？','如果入职后前两周，你会如何快速熟悉业务？'];
+      const star=`STAR 框架示例：\nS 情境：项目目标、业务背景、团队分工是什么。\nT 任务：你承担的具体任务和评价标准是什么。\nA 行动：你做了哪些调研、分析、沟通、工具使用和方案整理。\nR 结果：形成了什么产出，对团队、业务或课程展示有什么帮助。`;
+      const ask=['团队当前最希望该岗位解决什么问题？','这个岗位前三个月的核心评价标准是什么？','团队常用的工具、流程和协作方式是什么？','优秀候选人通常具备哪些共同特点？'];
+      $('interviewOutput').innerHTML=`<h3>面试准备包</h3>${demoNote()}<div class="result-card copyable"><button class="copy-btn" onclick="copyText(this)">复制</button><b>${stage}自我介绍</b><div class="copy-text">${safe(intro)}</div></div><div class="result-card"><b>高频问题</b><ul class="list-clean">${qs.map(q=>`<li>${safe(q)}</li>`).join('')}</ul></div><div class="result-card copyable"><button class="copy-btn" onclick="copyText(this)">复制</button><b>STAR 回答框架</b><div class="copy-text">${safe(star)}</div></div><div class="result-card"><b>反问问题</b><ul class="list-clean">${ask.map(q=>`<li>${safe(q)}</li>`).join('')}</ul></div><div class="notice">请将“项目、数据、结果”替换成自己的真实案例。不要背诵模板，要用模板组织真实经历。</div>`;
+      toast('面试准备包已生成');
+    }
+
+    function compareOffers(){
+      const aName=get('offerAName'), bName=get('offerBName');
+      const a=Number(get('aSalary'))*.25+Number(get('aGrowth'))*.35+Number(get('aFit'))*.3+Number(get('aCity'))*.1;
+      const b=Number(get('bSalary'))*.25+Number(get('bGrowth'))*.35+Number(get('bFit'))*.3+Number(get('bCity'))*.1;
+      const aw=Math.round(a*10), bw=Math.round(b*10);
+      const winner=aw>bw?aName:bw>aw?bName:'两者接近';
+      $('offerOutput').innerHTML=`<h3>对比结果</h3>${demoNote()}<div class="result-card"><b>${safe(aName)}</b>${bar('综合得分',aw)}<b>${safe(bName)}</b>${bar('综合得分',bw)}</div><div class="result-card"><b>建议结论</b><p>${winner==='两者接近'?'两个机会综合分接近，建议进一步比较团队质量、转正概率、业务稳定性和长期职业路径。':'当前更建议优先考虑：'+safe(winner)+'。'}</p></div><div class="result-card"><b>权重说明</b><ul class="list-clean"><li>成长性 35%，岗位匹配 30%，薪资/补贴 25%，城市/通勤 10%。</li><li>对实习和应届生而言，成长性与岗位匹配通常比短期薪资更重要。</li></ul></div>`;
+      toast('Offer 对比完成');
+    }
+
+    function addApplication(){
+      const item={id:Date.now(), company:get('appCompany'), role:get('appRole'), channel:get('appChannel'), score:get('appScore')||0, status:get('appStatus'), date:get('appDate')||cnDate(), note:get('appNote')};
+      if(!item.company||!item.role){ toast('请填写公司和岗位'); return; }
+      apps.unshift(item); saveApps(); renderApps(); toast('已新增投递记录');
+      ['appCompany','appRole','appNote'].forEach(id=>$(id).value=''); $('appScore').value=80;
+    }
+    function saveApps(){ localStorage.setItem('careerCopilotApps', JSON.stringify(apps)); }
+    function addSampleApps(){
+      apps=sampleApps(); saveApps(); renderApps(); toast('样例已填充');
+    }
+    function clearApps(){ if(confirm('确定清空投递看板吗？')){apps=[];saveApps();renderApps();toast('看板已清空')}}
+    function deleteApp(id){ apps=apps.filter(x=>x.id!==id);saveApps();renderApps();toast('已删除') }
+    function updateStatus(id,val){ const x=apps.find(a=>a.id===id); if(x){x.status=val;saveApps();renderApps();toast('状态已更新')} }
+    function renderApps(){
+      const search=(get('appSearch')||'').toLowerCase(); const filter=get('appFilter')||'全部';
+      const rows=apps.filter(a=>(filter==='全部'||a.status===filter)&&((a.company+a.role+a.channel+a.note).toLowerCase().includes(search)));
+      $('appTable').innerHTML=rows.length?rows.map(a=>{ const fp=followPriority(a.date,a.status); return `<tr><td><b>${safe(a.company)}</b></td><td>${safe(a.role)}</td><td>${safe(a.channel)}</td><td>${safe(a.score)}%</td><td><select class="status-select" onchange="updateStatus(${a.id},this.value)">${statusList.map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}</select></td><td>${safe(a.date)}</td><td><span class="follow-pill ${fp[1]}">${fp[0]}</span></td><td>${safe(a.note)}</td><td><button class="delete-btn" onclick="deleteApp(${a.id})">删除</button></td></tr>` }).join(''):`<tr><td colspan="9" style="text-align:center;color:#64748b;padding:28px">暂无记录，请新增或填充样例。</td></tr>`;
+      renderStats();
+    }
+    function renderStats(){
+      const count=s=>apps.filter(a=>a.status===s).length;
+      const total=apps.length, communicated=count('已沟通')+count('面试中')+count('Offer'), interview=count('面试中')+count('Offer'), follow=apps.filter(a=>followPriority(a.date,a.status)[0]!=='暂不需跟进').length;
+      const stats=[['总投递',total,'全部渠道记录'],['已沟通',communicated,'含沟通/面试/Offer'],['面试中',interview,'需要准备面试'],['待跟进',follow,'建议设置提醒']];
+      $('trackerStats').innerHTML=stats.map(([k,v,d])=>`<div class="metric-mini"><strong>${v}</strong><span>${k}｜${d}</span></div>`).join('');
+    }
+    function exportCSV(){
+      if(!apps.length){toast('暂无数据可导出');return}
+      const header=['公司','岗位','渠道','匹配度','状态','下一步日期','跟进优先级','备注'];
+      const csv=[header,...apps.map(a=>[a.company,a.role,a.channel,a.score,a.status,a.date,followPriority(a.date,a.status)[0],a.note])].map(row=>row.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+      const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='AI_Career_Copilot_投递记录.csv'; a.click(); URL.revokeObjectURL(url); toast('CSV 已导出');
+    }
+
+    renderProfile(); renderApps();
+  </script>
+</body>
+</html>
