@@ -288,7 +288,75 @@
       .hero-metrics{grid-template-columns:1fr 1fr!important;margin-top:30px!important}
       .hero .metric-mini{padding:15px!important}
     }
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
 
+  .nav-actions .btn {
+    height: 46px;
+    padding: 0 22px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+  }
+
+  .btn-prd {
+    background: rgba(255, 255, 255, 0.92);
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+  }
+
+  .btn-prd:hover {
+    color: #0f766e;
+    border-color: rgba(20, 184, 166, 0.38);
+    background: rgba(240, 253, 250, 0.95);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(15, 118, 110, 0.14);
+  }
+
+  .btn-icon {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .btn-arrow {
+    font-size: 17px;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 900px) {
+    .nav-actions {
+      gap: 8px;
+    }
+
+    .nav-actions .btn {
+      height: 42px;
+      padding: 0 14px;
+      font-size: 13px;
+    }
+
+    .btn-prd .btn-icon {
+      display: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .btn-prd {
+      display: none;
+    }
+  }
   </style>
 </head>
 <body>
@@ -314,7 +382,7 @@
         <a class="btn btn-primary btn-sm" href="#workbench">
           <span>体验 Demo</span>
           <span class="btn-arrow">→</span>
-        </a
+        </a>
       </div>
     </div>
   </nav>
