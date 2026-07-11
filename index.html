@@ -357,7 +357,6 @@
       display: none;
     }
   }
-
   </style>
 </head>
 <body>
@@ -365,14 +364,15 @@
     <div class="container nav-inner">
       <a class="brand" href="#top" aria-label="返回顶部">
         <span class="logo"></span>
-        <span>Career Copilot Agent<small>AI Job Workflow Demo</small></span>
+        <span>Career Copilot Pro V2<small>AI Job Workflow Demo</small></span>
       </a>
       <div class="nav-links">
-        <a href="#positioning">产品定位</a>
-        <a href="#modules">Agent架构</a>
-        <a href="#workbench">AI工作台</a>
-        <a href="#tracker">质量评估</a>
-        <a href="#review">项目复盘</a>
+        <a href="#positioning">定位</a>
+        <a href="#modules">架构</a>
+        <a href="#workbench">工作台</a>
+        <a href="#tracker">看板</a>
+        <a href="#metrics">指标</a>
+        <a href="#review">复盘</a>
       </div>
       <div class="nav-actions">
         <a class="btn btn-prd btn-sm" href="./AI-Career-Copilot-PRD.docx" download>
@@ -380,7 +380,7 @@
           <span>PRD 文档</span>
         </a>
         <a class="btn btn-primary btn-sm" href="#workbench">
-          <span>体验 Agent →</span>
+          <span>体验 Demo</span>
           <span class="btn-arrow">→</span>
         </a>
       </div>
@@ -567,33 +567,25 @@
     <div class="container">
       <div class="workbench">
         <div class="wb-head">
-         <div class="wb-head">
-  <div>
-    <h2>AI Agent 工作台</h2>
-    <p class="section-desc">
-      输入岗位 JD 与个人经历，Career Copilot Agent 会自动完成岗位解析、简历匹配、
-      优先级判断、材料生成与质量审核，并支持保存分析和 Markdown 报告导出。
-    </p>
-  </div>
-  <div class="tag-row">
-    <span class="tag dark">Railway FastAPI</span>
-    <span class="tag dark">Structured JSON</span>
-    <span class="tag dark">Quality Review</span>
-  </div>
-</div>
-        <div class="tabs">
-  <button class="tab" data-tab="profile">1 求职画像</button>
-  <button class="tab active" data-tab="agent">2 AI Agent 工作台</button>
-  <button class="tab" data-tab="priority">3 岗位优先级</button>
-  <button class="tab" data-tab="jd">4 JD 解析</button>
-  <button class="tab" data-tab="match">5 简历匹配</button>
-  <button class="tab" data-tab="resume">6 简历优化</button>
-  <button class="tab" data-tab="materials">7 材料生成</button>
-  <button class="tab" data-tab="interview">8 面试准备</button>
-  <button class="tab" data-tab="offer">9 Offer 对比</button>
-</div>
+          <div>
+            <h2>交互工作台 Demo</h2>
+            <p class="section-desc">先建立求职画像，再解析岗位 JD，随后生成匹配报告、优化材料并沉淀投递记录。当前已支持本地 FastAPI Agent 联调，也保留原有模拟交互用于作品集展示。</p>
+          </div>
+          <div class="tag-row"><span class="tag dark">FastAPI Agent</span><span class="tag dark">LocalStorage</span><span class="tag dark">可部署</span></div>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="profile">1 求职画像</button>
+          <button class="tab" data-tab="agent">Agent 联调</button>
+          <button class="tab" data-tab="priority">2 岗位优先级</button>
+          <button class="tab" data-tab="jd">3 JD 解析</button>
+          <button class="tab" data-tab="match">4 简历匹配</button>
+          <button class="tab" data-tab="resume">5 简历优化</button>
+          <button class="tab" data-tab="materials">6 材料生成</button>
+          <button class="tab" data-tab="interview">7 面试准备</button>
+          <button class="tab" data-tab="offer">8 Offer 对比</button>
+        </div>
 
-        <section class="tool-panel" id="tab-profile">
+        <section class="tool-panel active" id="tab-profile">
           <div class="tool-grid">
             <div class="tool-box">
               <h3>求职者画像配置</h3>
@@ -626,135 +618,7 @@
           </div>
         </section>
 
-        <section class="tool-panel active" id="tab-agent">
-  <div class="tool-grid">
-
-    <div class="tool-box">
-      <h3>运行 Career Copilot Agent</h3>
-      <p>
-        调用 Railway FastAPI 后端，通过 <b>/api/agent/run</b> 编排 JD 解析、简历匹配、
-        优先级判断、投递材料生成和质量审核，并返回结构化 JSON 结果。
-      </p>
-
-      <div class="agent-status-bar">
-        <span class="agent-status-pill">Railway 后端已配置</span>
-        <span class="agent-status-pill">/api/agent/run</span>
-        <span class="agent-status-pill">结构化输出</span>
-        <span class="agent-status-pill">Quality Review</span>
-      </div>
-
-      <div class="notice">
-        当前后端已部署至 Railway：
-        <b>https://ai-production-e9ea.up.railway.app</b>，
-        可通过 <b>/health</b> 和 <b>/docs</b> 验证服务状态。
-      </div>
-
-      <div class="agent-form-card">
-        <label>API 地址</label>
-        <input class="input" id="agentApiBase" value="https://ai-production-e9ea.up.railway.app" />
-      </div>
-
-      <div class="agent-form-card">
-        <label>岗位 JD</label>
-        <textarea
-          id="agentJD"
-          placeholder="粘贴完整岗位 JD，包含岗位名称、职责、任职要求、加分项等信息。"
-        ></textarea>
-      </div>
-
-      <div class="agent-form-card">
-        <label>个人简历 / 经历摘要</label>
-        <textarea
-          id="agentResume"
-          placeholder="粘贴简历内容、项目经历、教育背景、技能关键词、可实习时间等信息。"
-        ></textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="agent-form-card">
-          <label>作品集链接</label>
-          <input
-            class="input"
-            id="agentPortfolio"
-            value="https://lixuehu123.github.io/AI-/index.html"
-          />
-        </div>
-        <div class="agent-form-card">
-          <label>任务目标</label>
-          <input
-            class="input"
-            id="agentTask"
-            value="判断是否值得投递，并生成投递材料"
-          />
-        </div>
-      </div>
-
-      <div class="agent-actions">
-        <button class="btn btn-primary" onclick="runAgent()">
-          运行 Career Copilot Agent
-        </button>
-        <button class="btn btn-soft" onclick="fillAgentSample()">
-          填充示例 JD
-        </button>
-        <button class="btn btn-ghost" onclick="syncAgentFromModules()">
-          从现有模块同步
-        </button>
-      </div>
-    </div>
-
-    <div class="tool-box light">
-      <h3>Agent 输出结果</h3>
-      <p>
-        Career Copilot Agent 会返回 JD 解析、简历匹配、投递优先级、投递材料、
-        质量审核和下一步行动建议。
-      </p>
-
-      <div class="demo-note">Career Copilot Agent 实时返回结构化结果</div>
-
-      <div id="agentOutput">
-        <div class="agent-empty-state">
-          <h4>等待运行 Agent</h4>
-          <p>
-            系统将按照以下工作流完成求职投递分析，并在运行后展示可保存、可导出的结构化结果。
-          </p>
-
-          <div class="agent-flow">
-            <div class="agent-flow-step">
-              <b>JD 解析</b>
-              <span>parse_jd</span>
-            </div>
-            <div class="agent-flow-step">
-              <b>简历匹配</b>
-              <span>match_resume</span>
-            </div>
-            <div class="agent-flow-step">
-              <b>优先级判断</b>
-              <span>decide_priority</span>
-            </div>
-            <div class="agent-flow-step">
-              <b>材料生成</b>
-              <span>generate_material</span>
-            </div>
-            <div class="agent-flow-step">
-              <b>质量审核</b>
-              <span>quality_review</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="agent-actions">
-        <button class="btn btn-soft" onclick="saveAgentAnalysis()">
-          保存本次分析
-        </button>
-        <button class="btn btn-ghost" onclick="exportAgentReport()">
-          导出 Markdown 报告
-        </button>
-      </div>
-    </div>
-
-  </div>
-</section>
+        <section class="tool-panel" id="tab-agent">
           <div class="tool-grid">
             <div class="tool-box">
               <h3>一键运行 Career Copilot Agent</h3>
@@ -779,7 +643,7 @@
               </div>
             </div>
             <div class="tool-box light" id="agentOutput">
-              <h3>AI Agent 工作台结果</h3>
+              <h3>Agent 联调结果</h3>
               <p>等待调用后端。</p>
               <div class="notice">运行后将展示 JD 解析结果、简历匹配评分、投递优先级、投递材料、质量审核和下一步行动建议。</div>
             </div>
@@ -979,9 +843,7 @@
         <div class="qa-card"><h3>如何避免 AI 虚构经历？</h3><p>在 Prompt 层限制“只基于用户已有经历生成”，在输出层增加自检 Prompt，在交互层提示用户不得将虚构内容写入简历，并通过真实性约束标注风险。</p></div>
         <div class="qa-card"><h3>为什么第一版不接真实大模型 API？</h3><p>第一版重点验证产品流程、页面交互和信息架构，使用模拟数据降低开发复杂度。后续可接入大模型 API，实现真实 JD 解析和文案生成，同时补充日志、埋点和输出质量评估。</p></div>
       </div>
-      <div class="notice" style="margin-top:18px">本作品为个人 AI 产品作品集 Demo，用于展示 AI 产品设计、需求拆解、竞品分析、Prompt 设计、指标体系、交互设计与快速落地能力。当前版本为 AI Agent MVP：Agent 工作台已支持 Railway FastAPI 后端在线调用；
-  其他求职画像、JD 解析、简历匹配、材料生成、投递记录等模块保留规则化 Demo 逻辑，
-  用于展示完整求职产品流程，不代表商业化上线产品。</div>
+      <div class="notice" style="margin-top:18px">本作品为个人 AI 产品作品集 Demo，用于展示 AI 产品设计、需求拆解、竞品分析、Prompt 设计、指标体系、交互设计与快速落地能力。当前版本采用模拟数据和规则化逻辑展示核心流程，暂未接入真实大模型 API 和真实用户数据，不代表商业化上线产品。</div>
     </div>
   </section>
 
@@ -1004,19 +866,10 @@
     let profile = JSON.parse(localStorage.getItem('careerCopilotProfile')||'null');
     let lastAgentPayload = null;
     let lastAgentResult = null;
-   window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || {
-  API_BASE_URL: 'https://ai-production-e9ea.up.railway.app'
-};
-
-const API_BASE_URL =
-  window.CAREER_COPILOT_CONFIG.API_BASE_URL ||
-  'https://ai-production-e9ea.up.railway.app';
-
-const AGENT_API_BASE = API_BASE_URL;
-
-if ($('agentApiBase')) {
-  $('agentApiBase').value = API_BASE_URL;
-}
+    window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || { API_BASE_URL: 'https://ai-production-e9ea.up.railway.app' };
+    const API_BASE_URL = window.CAREER_COPILOT_CONFIG.API_BASE_URL || 'https://ai-production-e9ea.up.railway.app';
+    const AGENT_API_BASE = API_BASE_URL;
+    $('agentApiBase').value = API_BASE_URL;
 
     document.querySelectorAll('.tab').forEach(btn=>{
       btn.addEventListener('click',()=>{
@@ -1032,9 +885,7 @@ if ($('agentApiBase')) {
       setTimeout(()=>t.classList.remove('show'),1800);
     }
     function clearField(id){ $(id).value=''; }
-   function demoNote(){
-  return '<div class="demo-note">规则化 Demo 输出，仅用于展示产品交互逻辑。</div>';
-}
+    function demoNote(){ return '<div class="demo-note">模拟 AI 输出结果，仅用于 Demo 展示。</div>'; }
     function sampleApps(){ const today=cnDate(); const d=(n)=>{ const x=new Date(); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); }; return [
       {id:Date.now()+1,company:'小米',role:'AI 产品实习生',channel:'官网',score:86,status:'已投递',date:d(3),note:'3 天后跟进'},
       {id:Date.now()+2,company:'百度',role:'医疗智能体产品实习',channel:'BOSS直聘',score:82,status:'已沟通',date:today,note:'准备面试问题'},
@@ -1085,12 +936,12 @@ if ($('agentApiBase')) {
       const btn=$('agentRunBtn');
       if(btn){ btn.disabled=isLoading; btn.textContent=isLoading?'Agent 运行中...':'一键运行 Career Copilot Agent'; }
       if(isLoading){
-        $('agentOutput').innerHTML='<h3>AI Agent 工作台结果</h3><div class="result-card"><b>Loading</b><p>正在请求 FastAPI 后端，并按 JD解析 → 简历匹配 → 投递优先级判断 → 材料生成 → 质量审核 执行。</p></div>';
+        $('agentOutput').innerHTML='<h3>Agent 联调结果</h3><div class="result-card"><b>Loading</b><p>正在请求 FastAPI 后端，并按 JD解析 → 简历匹配 → 投递优先级判断 → 材料生成 → 质量审核 执行。</p></div>';
       }
     }
 
     function renderAgentError(message){
-      $('agentOutput').innerHTML=`<h3>AI Agent 工作台结果</h3><div class="notice">${safe(message)}</div><div class="result-card darkish"><b>排查建议</b><ul class="list-clean"><li>确认 FastAPI 后端已启动：${safe(get('agentApiBase') || AGENT_API_BASE)}/docs</li><li>确认请求字段为 jd_text、resume_text、user_profile、task。</li><li>如果浏览器提示 CORS，请检查后端 CORSMiddleware。</li></ul></div>`;
+      $('agentOutput').innerHTML=`<h3>Agent 联调结果</h3><div class="notice">${safe(message)}</div><div class="result-card darkish"><b>排查建议</b><ul class="list-clean"><li>确认 FastAPI 后端已启动：${safe(get('agentApiBase') || AGENT_API_BASE)}/docs</li><li>确认请求字段为 jd_text、resume_text、user_profile、task。</li><li>如果浏览器提示 CORS，请检查后端 CORSMiddleware。</li></ul></div>`;
       toast('Agent 请求失败');
     }
 
@@ -1131,7 +982,7 @@ if ($('agentApiBase')) {
       renderAgentPriority(data.priority_decision || {});
       renderAgentMaterials(data.generated_materials || {});
       $('agentOutput').innerHTML=`
-        <h3>AI Agent 工作台结果</h3>${agentNote()}
+        <h3>Agent 联调结果</h3>${agentNote()}
         <div class="result-card"><b>执行链路</b><p>${(data.trace||[]).map(x=>safe(x.step)).join(' → ') || 'parse_jd → match_resume → decide_priority → generate_material → quality_review'}</p></div>
         ${renderAgentJdSection(data.jd_analysis || {})}
         ${renderAgentMatchSection(data.resume_match || {})}
@@ -1178,7 +1029,7 @@ if ($('agentApiBase')) {
       $('profileTime').value='每周4天，可实习3个月以上';
       $('profileSkills').value='Python, SQL, Excel, Prompt, 用户调研, 竞品分析, PRD';
       saveProfile();
-      toast('已填充 AI Agent 工作台样例');
+      toast('已填充 Agent 联调样例');
     }
 
     function mdList(items, empty='暂无'){
@@ -1481,6 +1332,9 @@ ${data.recommended_next_action||'请人工确认材料后再投递。'}
   </script>
 </body>
 </html>
+
+
+
 
 
 
