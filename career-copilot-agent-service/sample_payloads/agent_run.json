@@ -1,0 +1,19 @@
+{
+  "user_profile": {
+    "identity": "应届生",
+    "target_roles": [
+      "AI产品",
+      "数据产品"
+    ],
+    "target_cities": [
+      "上海",
+      "杭州"
+    ],
+    "availability": "每周4天，可实习3个月以上",
+    "skills_summary": "Python, SQL, Excel, Prompt, 用户调研, 竞品分析, PRD",
+    "portfolio_url": "https://example.com/portfolio"
+  },
+  "resume_text": "我是信息管理与信息系统专业应届生，目标方向是AI产品实习。做过AI求职投递助手Demo，包含JD解析、简历匹配、材料生成和投递看板；使用Python整理岗位数据，用SQL做基础查询分析，用Excel制作指标表；曾完成用户访谈、竞品分析和Prompt迭代，并整理过PRD草稿。每周可到岗4天，可实习3个月以上。作品集：https://example.com/portfolio",
+  "jd_text": "公司：星河科技\n岗位：AI产品实习生\n岗位类型：实习\n职责：参与AI求职助手的用户调研、竞品分析、Prompt设计、数据看板搭建和需求文档整理。\n要求：熟悉Python、SQL、Excel，能进行需求分析和原型设计，每周到岗4天，可实习3个月以上。\n加分：有AI产品作品集、数据分析项目或大模型应用Demo。\n风险提示：节奏较快，需要主动推进跨部门沟通。",
+  "task": "判断是否值得投递，并生成投递材料"
+}
