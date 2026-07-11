@@ -2,6 +2,10 @@
 
 当前版本：V2.2：Agent MVP Showcase。
 
+当前状态：Career Copilot Agent MVP Showcase 本地可运行版本验收通过。
+后端端口：8001
+前端端口：5500
+
 本项目已从 GitHub Pages 静态 Demo 升级为可运行、可验收、可演示的 Career Copilot Agent MVP：前端保留原有工作台风格，通过本地 FastAPI 后端调用 `POST /api/agent/run`，完成 JD 解析、简历匹配、投递优先级判断、材料生成、质量审核和下一步建议。V2.2 重点面向作品集展示，让面试官快速理解项目定位、Agent 工作流、输出质量控制和后续演进路径。
 
 ## 版本进度
@@ -64,6 +68,18 @@ flowchart LR
 cd "C:\Users\86173\Documents\AI求职投递助手\career-copilot-agent-service"
 $env:PYTHONPATH='.'
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+若 8000 端口出现 WinError 10013 权限问题，可改用 8001 启动后端：
+
+```powershell
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+```
+
+前端 Agent 联调面板中的 API 地址同步填写：
+
+```text
+http://127.0.0.1:8001
 ```
 
 如果本机默认 `python` 指向旧版本，请先激活后端 `.venv`，或使用 Python 3.10+ 的解释器。
@@ -169,7 +185,8 @@ python -m unittest discover -s tests -v
 ## 本阶段修改文件
 
 - `index.html`：新增保存本次分析、导出 Markdown 报告、Agent 结果缓存、结构化报告生成和「项目说明 / Agent 架构」展示模块。
-- `docs/agent_evaluation.md`：新增 3 组真实岗位测试样例、输出摘要和质量评估表。`r`n- `docs/demo_video_script.md`：新增 1 分钟录屏脚本和面试讲稿。
+- `docs/agent_evaluation.md`：新增 3 组真实岗位测试样例、输出摘要和质量评估表。
+- `docs/demo_video_script.md`：新增 1 分钟录屏脚本和面试讲稿。
 - `career-copilot-agent-service/app/skills/match_resume.py`：收紧匹配评分，补充岗位场景证据检查。
 - `career-copilot-agent-service/app/agents/career_agent.py`：P1/P2 使用更具体的下一步行动建议。
 - `tests/test_frontend_integration.py`、`tests/test_agent_evaluation_docs.py`、`career-copilot-agent-service/tests/test_api.py`：补充对应回归测试。
