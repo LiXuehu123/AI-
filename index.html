@@ -367,12 +367,12 @@
         <span>Career Copilot Agent<small>AI Job Workflow Demo</small></span>
       </a>
       <div class="nav-links">
-        <a href="#positioning">产品定位</a>
-        <a href="#modules">Agent架构</a>
-        <a href="#workbench">AI工作台</a>
+        <a href="#positioning">定位</a>
+        <a href="#modules">架构</a>
+        <a href="#workbench">工作台</a>
         <a href="#tracker">看板</a>
-        <a href="#metrics">质量评估</a>
-        <a href="#review">项目复盘</a>
+        <a href="#metrics">指标</a>
+        <a href="#review">复盘</a>
       </div>
       <div class="nav-actions">
         <a class="btn btn-prd btn-sm" href="./AI-Career-Copilot-PRD.docx" download>
@@ -392,7 +392,7 @@
       <div>
         <div class="eyebrow">AI JOB APPLICATION COPILOT / AGENT MVP</div>
         <h1>面向所有求职者的<br><span>AI 求职投递助手</span></h1>
-        <p class="lead">把岗位判断、JD 解析、简历匹配、投递材料、面试准备、Offer 决策和复盘看板串成一个可操作的求职工作台，让求职不再依赖零散 Prompt 和临时文档。</p>
+        <p class="lead">把岗位 JD 解析、简历匹配、投递优先级判断、材料生成、质量审核和复盘导出，串成一套可运行、可评估、可沉淀的 AI Agent 工作流。</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#workbench">✧ 打开交互工作台</a>
           <a class="btn btn-ghost" href="#positioning">◉ 查看产品定位</a>
@@ -568,13 +568,14 @@
       <div class="workbench">
         <div class="wb-head">
           <div>
-            <h2>交互工作台 Demo</h2>
-            <p class="section-desc">先建立求职画像，再解析岗位 JD，随后生成匹配报告、优化材料并沉淀投递记录。当前已支持本地 FastAPI Agent 联调，也保留原有模拟交互用于作品集展示。</p>
+            <h2>AI Agent 工作台</h2>
+            <p class="section-desc"> 输入岗位 JD 与个人经历，Career Copilot Agent 会自动完成岗位解析、简历匹配、
+  优先级判断、材料生成与质量审核，并支持保存分析和 Markdown 报告导出。</p>
           </div>
           <div class="tag-row"><span class="tag dark">FastAPI Agent</span><span class="tag dark">LocalStorage</span><span class="tag dark">可部署</span></div>
         </div>
         <div class="tabs" role="tablist">
-          <button class="tab" data-tab="agent">Agent 联调</button>
+          <button class="tab" data-tab="agent">AI Agent 工作台</button>
           <button class="tab active" data-tab="profile">1 求职画像</button>
           <button class="tab" data-tab="priority">2 岗位优先级</button>
           <button class="tab" data-tab="jd">3 JD 解析</button>
@@ -621,7 +622,7 @@
         <section class="tool-panel" id="tab-agent">
           <div class="tool-grid">
             <div class="tool-box">
-              <h3>一键运行 Career Copilot Agent</h3>
+              <h3>运行 Career Copilot Agent</h3>
               <p>调用本地 FastAPI 后端，使用真实结构化 JSON 渲染 JD 解析、简历匹配、优先级、投递材料和质量审核。</p>
               <div class="notice">请先确认后端已启动：<b>https://ai-production-e9ea.up.railway.app/docs</b>；线上部署后可替换为 https://xxx.onrender.com</div>
               <label>API 地址</label>
@@ -635,7 +636,7 @@
                 <div><label>任务目标</label><input class="input" id="agentTask" value="判断是否值得投递，并生成投递材料"></div>
               </div>
               <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-                <button class="btn btn-primary" id="agentRunBtn" onclick="runCareerAgent()">一键运行 Career Copilot Agent</button>
+                <button class="btn btn-primary" id="agentRunBtn" onclick="runCareerAgent()">运行 Career Copilot Agent</button>
                 <button class="btn btn-ghost" onclick="fillAgentDemo()">填充联调样例</button>
                 <button class="btn btn-soft" onclick="syncAgentFromWorkbench()">同步当前 JD/简历</button>
                 <button class="btn btn-gold" onclick="saveCurrentAgentAnalysis()">保存本次分析</button>
@@ -643,7 +644,7 @@
               </div>
             </div>
             <div class="tool-box light" id="agentOutput">
-              <h3>Agent 联调结果</h3>
+              <h3>AI Agent 工作台结果</h3>
               <p>等待调用后端。</p>
               <div class="notice">运行后将展示 JD 解析结果、简历匹配评分、投递优先级、投递材料、质量审核和下一步行动建议。</div>
             </div>
@@ -934,14 +935,14 @@
 
     function setAgentLoading(isLoading){
       const btn=$('agentRunBtn');
-      if(btn){ btn.disabled=isLoading; btn.textContent=isLoading?'Agent 运行中...':'一键运行 Career Copilot Agent'; }
+      if(btn){ btn.disabled=isLoading; btn.textContent=isLoading?'Agent 运行中...':'运行 Career Copilot Agent'; }
       if(isLoading){
-        $('agentOutput').innerHTML='<h3>Agent 联调结果</h3><div class="result-card"><b>Loading</b><p>正在请求 FastAPI 后端，并按 JD解析 → 简历匹配 → 投递优先级判断 → 材料生成 → 质量审核 执行。</p></div>';
+        $('agentOutput').innerHTML='<h3>AI Agent 工作台结果</h3><div class="result-card"><b>Loading</b><p>正在请求 FastAPI 后端，并按 JD解析 → 简历匹配 → 投递优先级判断 → 材料生成 → 质量审核 执行。</p></div>';
       }
     }
 
     function renderAgentError(message){
-      $('agentOutput').innerHTML=`<h3>Agent 联调结果</h3><div class="notice">${safe(message)}</div><div class="result-card darkish"><b>排查建议</b><ul class="list-clean"><li>确认 FastAPI 后端已启动：${safe(get('agentApiBase') || AGENT_API_BASE)}/docs</li><li>确认请求字段为 jd_text、resume_text、user_profile、task。</li><li>如果浏览器提示 CORS，请检查后端 CORSMiddleware。</li></ul></div>`;
+      $('agentOutput').innerHTML=`<h3>AI Agent 工作台结果</h3><div class="notice">${safe(message)}</div><div class="result-card darkish"><b>排查建议</b><ul class="list-clean"><li>确认 FastAPI 后端已启动：${safe(get('agentApiBase') || AGENT_API_BASE)}/docs</li><li>确认请求字段为 jd_text、resume_text、user_profile、task。</li><li>如果浏览器提示 CORS，请检查后端 CORSMiddleware。</li></ul></div>`;
       toast('Agent 请求失败');
     }
 
@@ -982,7 +983,7 @@
       renderAgentPriority(data.priority_decision || {});
       renderAgentMaterials(data.generated_materials || {});
       $('agentOutput').innerHTML=`
-        <h3>Agent 联调结果</h3>${agentNote()}
+        <h3>AI Agent 工作台结果</h3>${agentNote()}
         <div class="result-card"><b>执行链路</b><p>${(data.trace||[]).map(x=>safe(x.step)).join(' → ') || 'parse_jd → match_resume → decide_priority → generate_material → quality_review'}</p></div>
         ${renderAgentJdSection(data.jd_analysis || {})}
         ${renderAgentMatchSection(data.resume_match || {})}
@@ -1029,7 +1030,7 @@
       $('profileTime').value='每周4天，可实习3个月以上';
       $('profileSkills').value='Python, SQL, Excel, Prompt, 用户调研, 竞品分析, PRD';
       saveProfile();
-      toast('已填充 Agent 联调样例');
+      toast('已填充 AI Agent 工作台样例');
     }
 
     function mdList(items, empty='暂无'){
