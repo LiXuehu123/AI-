@@ -623,9 +623,9 @@
             <div class="tool-box">
               <h3>一键运行 Career Copilot Agent</h3>
               <p>调用本地 FastAPI 后端，使用真实结构化 JSON 渲染 JD 解析、简历匹配、优先级、投递材料和质量审核。</p>
-              <div class="notice">请先确认后端已启动：<b>http://127.0.0.1:8001/docs</b>；线上部署后可替换为 https://xxx.onrender.com</div>
+              <div class="notice">请先确认后端已启动：<b>https://ai-production-e9ea.up.railway.app/docs</b>；线上部署后可替换为 https://xxx.onrender.com</div>
               <label>API 地址</label>
-              <input class="input" id="agentApiBase" value="http://127.0.0.1:8001" />
+              <input class="input" id="agentApiBase" value="https://ai-production-e9ea.up.railway.app" />
               <label>岗位 JD</label>
               <textarea id="agentJD" placeholder="粘贴完整岗位 JD，或点击下方按钮从 JD 解析模块同步"></textarea>
               <label>个人简历 / 经历摘要</label>
@@ -866,8 +866,8 @@
     let profile = JSON.parse(localStorage.getItem('careerCopilotProfile')||'null');
     let lastAgentPayload = null;
     let lastAgentResult = null;
-    window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || { API_BASE_URL: 'http://127.0.0.1:8001' };
-    const API_BASE_URL = window.CAREER_COPILOT_CONFIG.API_BASE_URL || 'http://127.0.0.1:8001';
+    window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || { API_BASE_URL: 'https://ai-production-e9ea.up.railway.app' };
+    const API_BASE_URL = window.CAREER_COPILOT_CONFIG.API_BASE_URL || 'https://ai-production-e9ea.up.railway.app';
     const AGENT_API_BASE = API_BASE_URL;
     $('agentApiBase').value = API_BASE_URL;
 
