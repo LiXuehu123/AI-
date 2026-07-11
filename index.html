@@ -549,7 +549,7 @@
       <div class="section-head">
         <div>
           <h2>项目说明 / Agent 架构</h2>
-          <p class="section-desc">V2.2：Agent MVP Showcase，把后端 Agent 能力包装成面试官可以快速理解、现场演示和复盘的作品集项目。</p>
+          <p class="section-desc">V2.3：线上部署适配，把本地 Agent MVP 包装成可配置后端地址、可本地运行、可接入公网 API 的作品集项目。</p>
         </div>
         <div class="tag-row"><span class="tag">Career Copilot</span><span class="tag">Agent Workflow</span><span class="tag">Portfolio Ready</span></div>
       </div>
@@ -557,8 +557,8 @@
         <div class="card"><div class="icon">01</div><h3>项目定位</h3><p>项目定位：AI 求职投递 Agent，帮助求职者判断岗位是否值得投、如何准备材料、如何复盘投递结果。</p></div>
         <div class="card"><div class="icon">02</div><h3>核心工作流</h3><p>JD解析 → 简历匹配 → 优先级判断 → 材料生成 → 质量审核，每一步都输出结构化结果。</p></div>
         <div class="card"><div class="icon">03</div><h3>技术架构</h3><p>HTML 前端 + FastAPI 后端 + Skills 工作流 + LocalStorage，前端负责联调展示，后端负责 Agent 编排。</p></div>
-        <div class="card"><div class="icon">04</div><h3>当前版本能力</h3><p>当前版本：V2.2：Agent MVP Showcase，支持 Agent 输出评估、保存分析和 Markdown 报告导出。</p></div>
-        <div class="card"><div class="icon">05</div><h3>后续规划</h3><p>部署上线、数据库记忆、多 Agent 协作，让作品集从本地 MVP 继续演进为可长期使用的求职助手。</p></div>
+        <div class="card"><div class="icon">04</div><h3>当前版本能力</h3><p>当前版本：V2.3：线上部署适配，支持 Agent 输出评估、保存分析、Markdown 报告导出和 API_BASE_URL 配置。</p></div>
+        <div class="card"><div class="icon">05</div><h3>后续规划</h3><p>后端上线、数据库记忆、多 Agent 协作，让作品集从本地 MVP 继续演进为可长期使用的求职助手。</p></div>
         <div class="card"><div class="icon">06</div><h3>质量约束</h3><p>质量审核会检查是否虚构经历、夸大经历、遗漏关键词、语气过度营销，降低求职材料风险。</p></div>
       </div>
     </div>
@@ -623,9 +623,9 @@
             <div class="tool-box">
               <h3>一键运行 Career Copilot Agent</h3>
               <p>调用本地 FastAPI 后端，使用真实结构化 JSON 渲染 JD 解析、简历匹配、优先级、投递材料和质量审核。</p>
-              <div class="notice">请先确认后端已启动：<b>http://127.0.0.1:8000/docs</b></div>
+              <div class="notice">请先确认后端已启动：<b>http://127.0.0.1:8001/docs</b>；线上部署后可替换为 https://xxx.onrender.com</div>
               <label>API 地址</label>
-              <input class="input" id="agentApiBase" value="http://127.0.0.1:8000" />
+              <input class="input" id="agentApiBase" value="http://127.0.0.1:8001" />
               <label>岗位 JD</label>
               <textarea id="agentJD" placeholder="粘贴完整岗位 JD，或点击下方按钮从 JD 解析模块同步"></textarea>
               <label>个人简历 / 经历摘要</label>
@@ -866,7 +866,10 @@
     let profile = JSON.parse(localStorage.getItem('careerCopilotProfile')||'null');
     let lastAgentPayload = null;
     let lastAgentResult = null;
-    const AGENT_API_BASE = 'http://127.0.0.1:8000';
+    window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || { API_BASE_URL: 'http://127.0.0.1:8001' };
+    const API_BASE_URL = window.CAREER_COPILOT_CONFIG.API_BASE_URL || 'http://127.0.0.1:8001';
+    const AGENT_API_BASE = API_BASE_URL;
+    $('agentApiBase').value = API_BASE_URL;
 
     document.querySelectorAll('.tab').forEach(btn=>{
       btn.addEventListener('click',()=>{
@@ -1329,6 +1332,9 @@ ${data.recommended_next_action||'请人工确认材料后再投递。'}
   </script>
 </body>
 </html>
+
+
+
 
 
 

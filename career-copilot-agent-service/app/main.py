@@ -1,4 +1,6 @@
-﻿from fastapi import FastAPI
+﻿import os
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.agents.career_agent import CareerCopilotAgent
@@ -16,6 +18,26 @@ from app.skills.generate_material import generate_material
 from app.skills.match_resume import match_resume
 from app.skills.parse_jd import parse_jd
 
+DEFAULT_CORS_ALLOW_ORIGINS = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://lixuehu123.github.io",
+]
+
+
+def build_cors_allow_origins(raw_origins: str | None = None) -> list[str]:
+    configured = os.getenv("CORS_ALLOW_ORIGINS", "") if raw_origins is None else raw_origins
+    origins = DEFAULT_CORS_ALLOW_ORIGINS.copy()
+    origins.extend(
+        origin.strip().rstrip("/")
+        for origin in configured.split(",")
+        if origin.strip()
+    )
+    return list(dict.fromkeys(origins))
+
+
+CORS_ALLOW_ORIGINS = build_cors_allow_origins()
+
 app = FastAPI(
     title="Career Copilot Agent Service",
     description="Agent MVP backend for AI job application workflow.",
@@ -24,7 +46,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ALLOW_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,4 +83,3 @@ async def api_generate_material(request: MaterialGenerateRequest) -> GeneratedMa
 @app.post("/api/agent/run", response_model=AgentRunResponse)
 async def api_run_agent(request: AgentRunRequest) -> AgentRunResponse:
     return agent.run(request)
-

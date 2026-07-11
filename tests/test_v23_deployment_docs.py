@@ -5,11 +5,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 README = ROOT / "README.md"
 CHECKLIST = ROOT / "docs" / "deployment_checklist.md"
+GUIDE = ROOT / "docs" / "deployment_guide.md"
 
 
 class DeploymentDocsTest(unittest.TestCase):
     def test_readme_documents_8001_local_fallback(self):
         text = README.read_text(encoding="utf-8")
+        self.assertNotIn("演示视频", text)
         for phrase in [
             "若 8000 端口出现 WinError 10013 权限问题，可改用 8001 启动后端",
             "python -m uvicorn app.main:app --host 127.0.0.1 --port 8001",
@@ -18,6 +20,24 @@ class DeploymentDocsTest(unittest.TestCase):
             "本地可运行版本验收通过",
             "后端端口：8001",
             "前端端口：5500",
+        ]:
+            self.assertIn(phrase, text)
+
+    def test_deployment_guide_covers_v23_online_adaptation(self):
+        self.assertTrue(GUIDE.exists())
+        text = GUIDE.read_text(encoding="utf-8")
+        for phrase in [
+            "V2.3 线上部署适配指南",
+            "本地运行",
+            "后端部署",
+            "前端配置 API 地址",
+            "线上验收步骤",
+            "常见问题",
+            "API_BASE_URL",
+            "http://127.0.0.1:8001",
+            "https://xxx.onrender.com",
+            "python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT",
+            "OPENAI_API_KEY",
         ]:
             self.assertIn(phrase, text)
 
@@ -41,4 +61,5 @@ class DeploymentDocsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 

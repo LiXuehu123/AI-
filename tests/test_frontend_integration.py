@@ -18,10 +18,14 @@ class FrontendIntegrationTest(unittest.TestCase):
         self.assertIn('id="agentOutput"', self.html)
         self.assertIn("runCareerAgent()", self.html)
 
-    def test_frontend_calls_local_agent_run_endpoint(self):
-        self.assertIn("http://127.0.0.1:8000", self.html)
+    def test_frontend_calls_configured_agent_run_endpoint(self):
+        self.assertIn("API_BASE_URL", self.html)
+        self.assertIn("CAREER_COPILOT_CONFIG", self.html)
+        self.assertIn("http://127.0.0.1:8001", self.html)
+        self.assertIn("https://xxx.onrender.com", self.html)
         self.assertIn("/api/agent/run", self.html)
         self.assertIn("fetch(`${apiBase}/api/agent/run`", self.html)
+        self.assertNotIn("http://127.0.0.1:8000/docs</b>", self.html)
 
     def test_payload_uses_backend_schema_field_names(self):
         build_payload = re.search(r"function buildAgentPayload\(\)\{(?P<body>.*?)function validateAgentPayload", self.html, re.S)
@@ -78,14 +82,16 @@ class FrontendIntegrationTest(unittest.TestCase):
     def test_showcase_agent_architecture_module_exists(self):
         for label in [
             "项目说明 / Agent 架构",
-            "V2.2：Agent MVP Showcase",
+            "V2.3：线上部署适配",
             "项目定位：AI 求职投递 Agent",
             "JD解析 → 简历匹配 → 优先级判断 → 材料生成 → 质量审核",
             "HTML 前端 + FastAPI 后端 + Skills 工作流 + LocalStorage",
-            "部署上线、数据库记忆、多 Agent 协作",
+            "后端上线、数据库记忆、多 Agent 协作",
         ]:
             self.assertIn(label, self.html)
 
 
 if __name__ == "__main__":
     unittest.main()
+
+

@@ -12,7 +12,7 @@ warnings.filterwarnings(
 
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import app, build_cors_allow_origins
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -36,6 +36,28 @@ class HttpContractTest(unittest.TestCase):
         self.assertNotIn("text", data)
         return data
 
+
+
+    def test_health_endpoint_is_ready_for_platform_checks(self):
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["status"], "ok")
+        self.assertEqual(response.json()["service"], "career-copilot-agent-service")
+
+    def test_cors_defaults_support_local_and_github_pages_frontends(self):
+        origins = build_cors_allow_origins("")
+        for origin in [
+            "http://127.0.0.1:5500",
+            "http://localhost:5500",
+            "https://lixuehu123.github.io",
+        ]:
+            self.assertIn(origin, origins)
+
+    def test_cors_env_allows_future_online_frontend_domains(self):
+        origins = build_cors_allow_origins("https://career-copilot.example.com, https://xxx.vercel.app")
+        self.assertIn("https://career-copilot.example.com", origins)
+        self.assertIn("https://xxx.vercel.app", origins)
+        self.assertIn("http://127.0.0.1:5500", origins)
 
     def test_http_endpoints_are_async_for_uvicorn_runtime(self):
         endpoints = {
@@ -134,5 +156,6 @@ class HttpContractTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
 
 

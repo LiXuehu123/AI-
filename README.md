@@ -1,12 +1,12 @@
 ﻿# AI 求职投递助手｜Career Copilot Agent MVP
 
-当前版本：V2.2：Agent MVP Showcase。
+当前版本：V2.3：线上部署适配。
 
-当前状态：Career Copilot Agent MVP Showcase 本地可运行版本验收通过。
+当前状态：Career Copilot Agent MVP Showcase 本地可运行版本验收通过，已进入线上部署适配。
 后端端口：8001
 前端端口：5500
 
-本项目已从 GitHub Pages 静态 Demo 升级为可运行、可验收、可演示的 Career Copilot Agent MVP：前端保留原有工作台风格，通过本地 FastAPI 后端调用 `POST /api/agent/run`，完成 JD 解析、简历匹配、投递优先级判断、材料生成、质量审核和下一步建议。V2.2 重点面向作品集展示，让面试官快速理解项目定位、Agent 工作流、输出质量控制和后续演进路径。
+本项目已从 GitHub Pages 静态 Demo 升级为可运行、可验收、可展示的 Career Copilot Agent MVP：前端保留原有工作台风格，通过 FastAPI 后端调用 `POST /api/agent/run`，完成 JD 解析、简历匹配、投递优先级判断、材料生成、质量审核和下一步建议。V2.3 重点完成线上部署适配，让项目具备本地可运行、线上可接入、作品集可说明的交付形态。
 
 ## 版本进度
 
@@ -16,13 +16,14 @@ V1.5 FastAPI 后端接口版
 V2.0 Career Copilot Agent MVP
 V2.1 Agent 输出评估与报告导出版
 V2.2 Agent MVP Showcase
+V2.3 线上部署适配版
 V3.0 数据库记忆与投递看板版
 V4.0 多 Agent 协作版
 ```
 
 ## 从 Demo 到 Agent MVP 的升级路径
 
-本项目最初是 AI 求职投递助手交互 Demo，用于验证 JD 解析、简历匹配、材料生成、投递看板等核心流程。V2.0 版本进一步引入 FastAPI 后端，将 JD 解析、简历匹配、投递优先级判断、材料生成和质量审核封装为 Agent 工作流。V2.1 版本加入真实岗位输出评估、分析结果保存和 Markdown 报告导出，使项目从一次性生成工具升级为可执行、可解释、可复盘的 Career Copilot Agent MVP。V2.2：Agent MVP Showcase 进一步补充作品集叙事和页面说明，让项目更适合面试展示。
+本项目最初是 AI 求职投递助手交互 Demo，用于验证 JD 解析、简历匹配、材料生成、投递看板等核心流程。V2.0 版本进一步引入 FastAPI 后端，将 JD 解析、简历匹配、投递优先级判断、材料生成和质量审核封装为 Agent 工作流。V2.1 版本加入真实岗位输出评估、分析结果保存和 Markdown 报告导出，使项目从一次性生成工具升级为可执行、可解释、可复盘的 Career Copilot Agent MVP。V2.2：Agent MVP Showcase 进一步补充作品集叙事和页面说明，让项目更适合面试展示。V2.3 进一步补充前端 API 配置入口、后端 CORS 白名单、健康检查说明和部署指南，为后端上线与前端接入公网 API 做准备。
 
 ## 项目架构图
 
@@ -62,6 +63,24 @@ flowchart LR
 
 输出质量评估记录见 [`docs/agent_evaluation.md`](docs/agent_evaluation.md)。当前评估方法使用 AI 产品、产品运营 / 商业化运营、数据运营 / 数据产品 3 类真实岗位样例，检查 JD 解析准确性、匹配评分合理性、证据真实性、能力缺口具体性、投递材料可用性、质量审核有效性和下一步行动建议的可执行性。
 
+## 作品集展示与部署说明
+
+当前展示方式不依赖录屏，重点放在三类可验收材料：
+
+- 本地可运行：后端 `8001` + 前端 `5500`，可完整跑通 Agent 联调、保存分析和 Markdown 报告导出。
+- 线上部署说明：见 [`docs/deployment_guide.md`](docs/deployment_guide.md)，包含后端部署、前端 API 地址配置、线上验收步骤和常见问题。
+- 项目截图 / 结构说明：建议准备首页项目说明截图、Agent 联调运行结果截图、Markdown 报告导出结果截图。
+
+前端提供统一配置入口：
+
+```javascript
+window.CAREER_COPILOT_CONFIG = window.CAREER_COPILOT_CONFIG || {
+  API_BASE_URL: 'http://127.0.0.1:8001'
+};
+```
+
+本地默认使用 `http://127.0.0.1:8001`；后端上线后可替换为 `https://xxx.onrender.com` 或其他云端地址。
+
 ## 启动后端
 
 ```powershell
@@ -87,6 +106,12 @@ http://127.0.0.1:8001
 Swagger：
 
 ```text
+http://127.0.0.1:8001/docs
+```
+
+如果后端使用 8000 端口，也可以打开：
+
+```text
 http://127.0.0.1:8000/docs
 ```
 
@@ -110,7 +135,7 @@ http://127.0.0.1:5500/index.html
 3. 结果生成后可点击「保存本次分析」，写入 LocalStorage。
 4. 可点击「导出分析报告」，下载 Markdown 报告。
 
-演示视频脚本与面试讲稿见 [docs/demo_video_script.md](docs/demo_video_script.md)。
+项目讲解脚本与面试讲稿见 [docs/demo_video_script.md](docs/demo_video_script.md)。
 
 ## 前端请求体
 
@@ -143,7 +168,7 @@ http://127.0.0.1:5500/index.html
 - `quality_review`：虚构风险、夸大风险、关键词遗漏、语气风险
 - `recommended_next_action`：下一步行动建议
 
-前端只调用本地后端，不包含 OpenAI API Key。密钥仍由后端 `.env` 管理。
+前端只调用配置的后端 API，不包含 OpenAI API Key。密钥仍由后端 `.env` 或部署平台环境变量管理。
 
 ## 输出质量评估记录
 
@@ -184,12 +209,14 @@ python -m unittest discover -s tests -v
 
 ## 本阶段修改文件
 
-- `index.html`：新增保存本次分析、导出 Markdown 报告、Agent 结果缓存、结构化报告生成和「项目说明 / Agent 架构」展示模块。
+- `index.html`：新增保存本次分析、导出 Markdown 报告、Agent 结果缓存、结构化报告生成、「项目说明 / Agent 架构」展示模块和 `API_BASE_URL` 配置入口。
 - `docs/agent_evaluation.md`：新增 3 组真实岗位测试样例、输出摘要和质量评估表。
-- `docs/demo_video_script.md`：新增 1 分钟录屏脚本和面试讲稿。
+- `docs/deployment_guide.md`：新增 V2.3 本地运行、后端部署、前端 API 配置、线上验收和常见问题说明。
+- `docs/demo_video_script.md`：保留项目讲解脚本和面试讲稿。
 - `career-copilot-agent-service/app/skills/match_resume.py`：收紧匹配评分，补充岗位场景证据检查。
 - `career-copilot-agent-service/app/agents/career_agent.py`：P1/P2 使用更具体的下一步行动建议。
 - `tests/test_frontend_integration.py`、`tests/test_agent_evaluation_docs.py`、`career-copilot-agent-service/tests/test_api.py`：补充对应回归测试。
+
 
 
 
